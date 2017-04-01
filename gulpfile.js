@@ -2,26 +2,25 @@ const gulp = require('gulp');
 
 const config = require('./config')();
 
-require('./tasks/webpack');
 require('./tasks/exec');
 require('./tasks/livereload');
 require('./tasks/build');
-require('./tasks/copy');
-require('./tasks/lint');
+require('./tasks/compile');
+require('./tasks/clean');
 
-gulp.task('webpack:watch', gulp.series('lint', 'webpack', function () {
-  gulp.watch(`${config.src.path}/**/*.*`, gulp.series('lint', 'webpack'));
-}));
+gulp.task('dev', gulp.series([
+  'clean:compile',
+  'compile',
+  gulp.parallel([
+    'compile:watch',
+    'livereload:listen',
+    'nw:exec'
+  ])]));
 
-gulp.task('dev', gulp.parallel([
-  'webpack:watch',
-  'livereload:listen',
-  gulp.series('copy', 'nw:exec')
-]));
-
-gulp.task('build', gulp.series(
-  gulp.parallel(['webpack', 'copy']),
+gulp.task('build', gulp.series([
+  'clean:compile',
+  'compile',
   'nw:build'
-));
+]));
 
 gulp.task('default', gulp.series('dev'));

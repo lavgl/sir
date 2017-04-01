@@ -9,14 +9,7 @@ function copyFactory({ from, to }) {
   };
 }
 
-gulp.task('copy:index', copyFactory({
-  from: path.resolve(config.app.path, 'index.html'),
-  to: config.compile.path
-}));
-
 gulp.task('copy:package', copyFactory({
   from: path.resolve(config.app.path, 'package.json'),
   to: config.compile.path
 }));
-
-gulp.task('copy', gulp.parallel(['copy:index', 'copy:package']));
