@@ -1,14 +1,5 @@
-import { Component } from 'react';
-
-class Root extends Component {
-  render() {
-    return (
-      <div>
-        <h1>Hello World!!!!</h1>
-      </div>
-    );
-  }
+if (process.env.NODE_ENV === 'production') {
+  module.exports = require('./Root.prod')
+} else {
+  module.exports = require('./Root.dev')
 }
-
-export default Root;
-

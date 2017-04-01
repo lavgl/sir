@@ -5,6 +5,11 @@ module.exports = {
     es6: true
   },
   parser: "babel-eslint",
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true
+    }
+  },
   extends: [
     "eslint:recommended"
   ],
@@ -12,6 +17,7 @@ module.exports = {
     "react"
   ],
   rules: {
-    "no-console": 1
+    "no-console": 1,
+    "no-unused-vars": 1
   }
 };
