@@ -10,6 +10,15 @@ module.exports = {
     filename: 'bundle.js',
     path: config.compile.path
   },
+  resolve: {
+    alias: {
+      reducers: path.resolve(config.src.path, 'redux/reducers'),
+      actions: path.resolve(config.src.path, 'redux/actions'),
+      components: path.resolve(config.src.path, 'components'),
+      containers: path.resolve(config.src.path, 'containers'),
+      constants: path.resolve(config.src.path, 'constants')
+    }
+  },
   module: {
     rules: [
       {

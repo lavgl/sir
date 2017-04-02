@@ -1,5 +1,15 @@
+import { combineReducers } from 'redux';
 
-const initialState = {};
-const rootReducer = (state = initialState, action) => state;
+import Images from './Images';
+import UI from './UI';
+import Standards from './Standards';
+import Groups from './Groups';
+
+const rootReducer = combineReducers({
+  UI,
+  Images,
+  Standards,
+  Groups
+});
 
 export default rootReducer;
