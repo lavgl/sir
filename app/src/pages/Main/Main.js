@@ -32,6 +32,7 @@ class Main extends Component {
       <div>
         <h1>Main Page</h1>
         <Chart
+          name = "main"
           data = {this.props.chartData}
           config = {chartConfig}
         />

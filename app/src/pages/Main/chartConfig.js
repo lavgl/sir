@@ -9,8 +9,12 @@ import Image from 'components/Chart/elements/Image';
 import Standard from 'components/Chart/elements/Standard';
 
 export default Immutable.fromJS({
-  width: 500,
   height: 500,
+  axes: {
+    x: {
+      domain: [-10, 10]
+    }
+  },
   elements: {
     [IMAGE]: {
       render: (datum) => (
