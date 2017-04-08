@@ -11,6 +11,8 @@ class Image extends Component {
       <circle
         cx = {this.props.x}
         cy = {this.props.y}
+        fill = 'blue'
+        r = {10}
       />
     )
   }

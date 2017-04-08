@@ -7,9 +7,14 @@ import {
   initChart
 } from 'actions/UI';
 
+import {
+  DEFAULT_CHART_WIDTH
+} from 'constants/Chart';
+
 const initialState = Immutable.fromJS({
   charts: {}
 });
+
 
 const initChartState = Immutable.fromJS({
   zoom: {
@@ -17,13 +22,18 @@ const initChartState = Immutable.fromJS({
     y: 0,
     k: 1
   },
-  width: 100
+  width: DEFAULT_CHART_WIDTH
 });
 
 const UI = handleActions({
   [initChart]: (state, action) => {
-    const { name } = action.payload;
-    return state.setIn(['charts', name], initChartState);
+    const { name, config } = action.payload;
+    const height = config.get('height');
+    const axes = config.get('axes');
+    return state.setIn(['charts', name],
+      initChartState
+        .set('height', height)
+        .set('axes', axes));
   },
   [setChartZoom]: (state, action) => {
     const { name, k } = action.payload;

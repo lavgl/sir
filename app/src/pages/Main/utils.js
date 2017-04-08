@@ -1,5 +1,10 @@
 import Immutable from 'immutable';
 
+import {
+  IMAGE,
+  STANDARD
+} from 'constants/elementTypes';
+
 const createMapItem = (type) => (item) => {
   return Immutable.fromJS({
     type,
@@ -7,12 +12,12 @@ const createMapItem = (type) => (item) => {
   });
 };
 
-export const mapImageItem = createMapItem('image');
+export const mapImageItem = createMapItem(IMAGE);
 
 export const mapStandardItem = (item, groups) => {
   const group = groups.get(''+item.get('groupId'));
   return Immutable.fromJS({
-    type: 'standard',
+    type: STANDARD,
     props: item
       .set('group', group)
       .remove('groupId')

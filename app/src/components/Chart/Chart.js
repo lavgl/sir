@@ -1,28 +1,34 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
-import elementResizeDetectorMaker from 'element-resize-detector';
+// import elementResizeDetectorMaker from 'element-resize-detector';
 
 import {
   initChart,
   setChartWidth
 } from 'actions/UI';
 
+import ChartView from './ChartView';
+
 import {
-  getWidth
+  getWidth,
+  isReady
 } from './ChartUtils';
 
 import {
-  getChartState
+  getChartStateFromRedux,
+  getXScaleFactory,
+  getYScaleFactory,
+  getChartStateFactory
 } from './ChartSelectors';
 
-const erd = elementResizeDetectorMaker({
-  strategy: 'scroll'
-});
+// const erd = elementResizeDetectorMaker({
+//   strategy: 'scroll'
+// });
 
 function mapStateToProps(state, props) {
   return {
-    chart: getChartState(state, props)
+    chart: getChartStateFromRedux(state, props)
   }
 }
 
@@ -43,38 +49,60 @@ class Chart extends Component {
   constructor(props) {
     super(props);
 
-    this.makeRef = this.makeRef.bind(this);
-  }
+    // this.makeRef = this.makeRef.bind(this);
 
-  makeRef(ref) {
-    this.chart = ref;
-  }
+    this.getChartState = getChartStateFactory();
+    this.getXScale = getXScaleFactory(this.getChartState);
+    this.getYScale = getYScaleFactory(this.getChartState);
 
-  componentWillMount() {
-    this.props.initChart({
-      name: this.props.name
+    props.initChart({
+      name: props.name,
+      config: props.config
     });
   }
 
-  componentDidMount() {
-    erd.listenTo(this.chart, (element) => this.props.setChartWidth({
-      name: this.props.name,
-      width: getWidth(element)
-    }));
-  }
+  // makeRef(ref) {
+  //   this.chart = ref;
+  // }
+
+  // componentWillMount() {
+  //   this.props.initChart({
+  //     name: this.props.name,
+  //     config: this.props.config
+  //   });
+  // }
+
+  // componentDidMount() {
+  //   erd.listenTo(this.chart, (element) => this.props.setChartWidth({
+  //     name: this.props.name,
+  //     width: getWidth(element)
+  //   }));
+  // }
 
   render() {
-    console.log(this.props.chart);
-    return (
-      <div ref = {this.makeRef}>
-        <svg width = '100%' height = '100%'>
-          <g>
-            {/*{grid will be here}*/}
-          </g>
-          {this.props.data.map(datum => {
+    console.log('state', this.props.chart);
 
-          })}
-        </svg>
+    if (!isReady(this.props)) {
+      return <div>Loading...</div>
+    }
+
+    const style = {
+      height: this.props.config.get('height')
+    };
+
+    const xScale = this.getXScale(this.props);
+    const yScale = this.getYScale(this.props);
+
+    return (
+      <div ref = {this.makeRef} style = {style}>
+        <ChartView
+          name = {this.props.name}
+          data = {this.props.data}
+          config = {this.props.config}
+          xScale = {xScale}
+          yScale = {yScale}
+          setChartWidth = {this.props.setChartWidth}
+        />
       </div>
     );
   }

@@ -13,22 +13,27 @@ export default Immutable.fromJS({
   axes: {
     x: {
       domain: [-10, 10]
+    },
+    y: {
+      domain: [-10, 10]
     }
   },
   elements: {
     [IMAGE]: {
-      render: (datum) => (
+      render: ({ x, y }, datum) => (
         <Image
-          x = {datum.get('x')}
-          y = {datum.get('y')}
+          key = {`image_${datum.get('id')}`}
+          x = {x}
+          y = {y}
         />
       ),
     },
     [STANDARD]: {
-      render: (datum) => (
+      render: ({ x, y }, datum) => (
         <Standard
-          x = {datum.get('x')}
-          y = {datum.get('y')}
+          key = {`standard_${datum.get('id')}`}
+          x = {x}
+          y = {y}
         />
       )
     }

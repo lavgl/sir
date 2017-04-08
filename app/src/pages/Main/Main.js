@@ -27,7 +27,6 @@ class Main extends Component {
   }
 
   render() {
-    console.log('chart data', this.props.chartData.toJS());
     return (
       <div>
         <h1>Main Page</h1>
