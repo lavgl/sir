@@ -1,7 +1,6 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
-// import elementResizeDetectorMaker from 'element-resize-detector';
 
 import {
   initChart,
@@ -11,7 +10,6 @@ import {
 import ChartView from './ChartView';
 
 import {
-  getWidth,
   isReady
 } from './ChartUtils';
 
@@ -21,10 +19,6 @@ import {
   getYScaleFactory,
   getChartStateFactory
 } from './ChartSelectors';
-
-// const erd = elementResizeDetectorMaker({
-//   strategy: 'scroll'
-// });
 
 function mapStateToProps(state, props) {
   return {
@@ -49,8 +43,6 @@ class Chart extends Component {
   constructor(props) {
     super(props);
 
-    // this.makeRef = this.makeRef.bind(this);
-
     this.getChartState = getChartStateFactory();
     this.getXScale = getXScaleFactory(this.getChartState);
     this.getYScale = getYScaleFactory(this.getChartState);
@@ -61,27 +53,7 @@ class Chart extends Component {
     });
   }
 
-  // makeRef(ref) {
-  //   this.chart = ref;
-  // }
-
-  // componentWillMount() {
-  //   this.props.initChart({
-  //     name: this.props.name,
-  //     config: this.props.config
-  //   });
-  // }
-
-  // componentDidMount() {
-  //   erd.listenTo(this.chart, (element) => this.props.setChartWidth({
-  //     name: this.props.name,
-  //     width: getWidth(element)
-  //   }));
-  // }
-
   render() {
-    console.log('state', this.props.chart);
-
     if (!isReady(this.props)) {
       return <div>Loading...</div>
     }
@@ -94,7 +66,7 @@ class Chart extends Component {
     const yScale = this.getYScale(this.props);
 
     return (
-      <div ref = {this.makeRef} style = {style}>
+      <div style = {style}>
         <ChartView
           name = {this.props.name}
           data = {this.props.data}

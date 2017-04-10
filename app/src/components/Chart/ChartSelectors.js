@@ -19,16 +19,19 @@ function getChartStateFactory() {
   return (props) => props.chart;
 }
 
-function getScaleSelectorFactory(domainPath, dimensionPath, getScaleFn) {
+function getScaleSelectorFactory(domainPath, dimensionPath, marginsPaths, getScaleFn) {
   return (chartStateSelector) => {
     return createSelector(
       [chartStateSelector],
       (chartState) => {
         const domain = chartState.getIn(domainPath);
         const dimension = chartState.getIn(dimensionPath);
+        const margin = marginsPaths
+          .map(path => chartState.getIn(path))
+          .reduce((result, margin) => result + margin, 0);
         return getScaleFn(
           domain && domain.toJS(),
-          [0, dimension]
+          [0, dimension - margin]
         );
       }
     )
@@ -38,24 +41,19 @@ function getScaleSelectorFactory(domainPath, dimensionPath, getScaleFn) {
 const getXScaleFactory = getScaleSelectorFactory(
   ['axes', 'x', 'domain'],
   ['width'],
+  [
+    ['margins', 'left'],
+    ['margins', 'right']
+  ],
   getXScale
 );
 
 const getYScaleFactory = getScaleSelectorFactory(
   ['axes', 'y', 'domain'],
   ['height'],
+  [
+    ['margins', 'top'],
+    ['margins', 'bottom']
+  ],
   getYScale
 );
-
-// function getXScaleFactory(chartStateSelector) {
-//   return createSelector(
-//     [chartStateSelector],
-//     (chartState) => {
-//       const domain = chartState.getIn(['axes', 'x', 'domain']);
-//       return getScale(
-//         domain && domain.toJS(),
-//         [0, chartState.get('width')]
-//       );
-//     }
-//   );
-// }

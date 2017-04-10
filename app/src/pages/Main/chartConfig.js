@@ -8,14 +8,25 @@ import {
 import Image from 'components/Chart/elements/Image';
 import Standard from 'components/Chart/elements/Standard';
 
+import {
+  DEFAULT_CHART_DOMAIN_X,
+  DEFAULT_CHART_DOMAIN_Y
+} from 'constants/Chart';
+
 export default Immutable.fromJS({
   height: 500,
+  margins: {
+    top: 25,
+    right: 25,
+    bottom: 25,
+    left: 25
+  },
   axes: {
     x: {
-      domain: [-10, 10]
+      domain: DEFAULT_CHART_DOMAIN_X
     },
     y: {
-      domain: [-10, 10]
+      domain: DEFAULT_CHART_DOMAIN_Y
     }
   },
   elements: {

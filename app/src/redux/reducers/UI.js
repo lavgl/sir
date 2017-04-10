@@ -11,10 +11,16 @@ import {
   DEFAULT_CHART_WIDTH
 } from 'constants/Chart';
 
+function mapChartConfig(config) {
+  return Immutable.Map()
+    .set('height', config.get('height'))
+    .set('margins', config.get('margins'))
+    .set('axes', config.get('axes'));
+}
+
 const initialState = Immutable.fromJS({
   charts: {}
 });
-
 
 const initChartState = Immutable.fromJS({
   zoom: {
@@ -31,9 +37,7 @@ const UI = handleActions({
     const height = config.get('height');
     const axes = config.get('axes');
     return state.setIn(['charts', name],
-      initChartState
-        .set('height', height)
-        .set('axes', axes));
+      initChartState.merge(mapChartConfig(config)));
   },
   [setChartZoom]: (state, action) => {
     const { name, k } = action.payload;
