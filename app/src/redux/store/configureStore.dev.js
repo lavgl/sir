@@ -1,4 +1,5 @@
-import { createStore, compose } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import rootReducer from '../reducers';
 import DevTools from '../../containers/DevTools';
 
@@ -7,6 +8,7 @@ const configureStore = preloadedState => {
     rootReducer,
     preloadedState,
     compose(
+      applyMiddleware(thunk),
       DevTools.instrument()
     )
   );
