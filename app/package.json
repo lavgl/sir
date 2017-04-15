@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "window": {
+    "min_width": 600,
+    "min_height": 600
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -13,6 +17,7 @@
     "d3": "^4.7.4",
     "element-resize-detector": "^1.1.11",
     "immutable": "^3.8.1",
+    "ramda": "^0.23.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.3",

@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 import { connect } from 'react-redux';
 
 import Chart from 'components/Chart';
+import Footer from 'components/Footer';
 
 import {
   chartData
@@ -16,6 +17,12 @@ function mapStateToProps(state) {
   };
 }
 
+const style = {
+  page: {
+    position: 'relative'
+  }
+};
+
 @connect(mapStateToProps, null)
 class Main extends Component {
   static propTypes = {
@@ -28,13 +35,16 @@ class Main extends Component {
 
   render() {
     return (
-      <div>
+      <div style = {style.page}>
         <h1>Main Page</h1>
         <Chart
           name = "main"
           data = {this.props.chartData}
           config = {chartConfig}
         />
+        <Footer>
+          LOL
+        </Footer>
       </div>
     );
   }
