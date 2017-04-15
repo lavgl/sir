@@ -4,12 +4,17 @@ import { handleActions } from 'redux-actions';
 import {
   setChartZoom,
   setChartWidth,
-  initChart
+  initChart,
+  setMousePosition
 } from 'actions/UI';
 
 import {
   DEFAULT_CHART_WIDTH
 } from 'constants/Chart';
+
+const {
+  fromJS
+} = Immutable;
 
 function mapChartConfig(config) {
   return Immutable.Map()
@@ -18,15 +23,21 @@ function mapChartConfig(config) {
     .set('axes', config.get('axes'));
 }
 
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
   charts: {}
 });
 
-const initChartState = Immutable.fromJS({
+const initChartState = fromJS({
   zoom: {
     x: 0,
     y: 0,
     k: 1
+  },
+  mouse: {
+    position: {
+      x: 0,
+      y: 0
+    }
   },
   width: DEFAULT_CHART_WIDTH
 });
@@ -46,6 +57,10 @@ const UI = handleActions({
   [setChartWidth]: (state, action) => {
     const { name, width } = action.payload;
     return state.setIn(['charts', name, 'width'], width);
+  },
+  [setMousePosition]: (state, action) => {
+    const { name, position } = action.payload;
+    return state.setIn(['charts', name, 'mouse', 'position'], fromJS(position));
   }
 }, initialState);
 

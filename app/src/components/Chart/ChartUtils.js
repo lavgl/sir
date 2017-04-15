@@ -14,7 +14,8 @@ export {
   isReady,
   getBottomAxisTransform,
   getLeftAxisTransform,
-  getElementsTransform
+  getElementsTransform,
+  getMousePosition
 }
 
 function getWidth(element) {
@@ -40,7 +41,6 @@ function isReady(props) {
 function getBottomAxisTransform(config) {
   const height = config.get('height');
   const marginTop = config.getIn(['margins', 'top']);
-  const marginBottom = config.getIn(['margins', 'bottom']);
   const marginLeft = config.getIn(['margins', 'left']);
   return `translate(${marginLeft}, ${height - marginTop})`;
 }
@@ -49,7 +49,6 @@ function getLeftAxisTransform(config) {
   const margins = config.get('margins');
   const marginLeft = margins.get('left');
   const marginTop = margins.get('top');
-  const marginBottom = margins.get('bottom');
   return `translate(${marginLeft}, ${marginTop})`;
 }
 
@@ -58,4 +57,15 @@ function getElementsTransform(config) {
   const marginLeft = margins.get('left');
   const marginTop = margins.get('top');
   return `translate(${marginLeft}, ${marginTop})`;
+}
+
+function getMousePosition(config, xScale, yScale, nativeEvent) {
+  const margins = config.get('margins');
+  const marginLeft = margins.get('left');
+  const marginTop = margins.get('top');
+  const { offsetX, offsetY } = nativeEvent;
+  return {
+    x: xScale.invert(offsetX - marginLeft),
+    y: yScale.invert(offsetY - marginTop)
+  };
 }

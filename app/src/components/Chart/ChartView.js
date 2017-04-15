@@ -9,7 +9,8 @@ import {
   getWidth,
   getBottomAxisTransform,
   getLeftAxisTransform,
-  getElementsTransform
+  getElementsTransform,
+  getMousePosition
 } from './ChartUtils';
 
 const erd = elementResizeDetectorMaker({
@@ -23,7 +24,8 @@ class ChartView extends Component {
     config: PropTypes.instanceOf(Immutable.Map).isRequired,
     xScale: PropTypes.func.isRequired,
     yScale: PropTypes.func.isRequired,
-    setChartWidth: PropTypes.func.isRequired
+    setChartWidth: PropTypes.func.isRequired,
+    setMousePosition: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -31,6 +33,7 @@ class ChartView extends Component {
 
     this.makeRef = this.makeRef.bind(this);
     this.resizeListener = this.resizeListener.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
   }
 
   makeRef(ref) {
@@ -41,6 +44,19 @@ class ChartView extends Component {
     this.props.setChartWidth({
       name: this.props.name,
       width: getWidth(element)
+    });
+  }
+
+  handleMouseMove(e) {
+    const position = getMousePosition(
+      this.props.config,
+      this.props.xScale,
+      this.props.yScale,
+      e.nativeEvent
+    );
+    this.props.setMousePosition({
+      name: this.props.name,
+      position
     });
   }
 
@@ -55,7 +71,11 @@ class ChartView extends Component {
   render() {
     const { xScale, yScale, config } = this.props;
     return (
-      <div ref = {this.makeRef} style={{ height: '100%' }}>
+      <div
+        ref = {this.makeRef}
+        style={{ height: '100%' }}
+        onMouseMove = {this.handleMouseMove}
+      >
         <svg width = '100%' height = '100%'>
           <g>
             {/*{grid will be here}*/}

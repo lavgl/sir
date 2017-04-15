@@ -4,7 +4,8 @@ import Immutable from 'immutable';
 
 import {
   initChart,
-  setChartWidth
+  setChartWidth,
+  setMousePosition
 } from 'actions/UI';
 
 import ChartView from './ChartView';
@@ -28,7 +29,8 @@ function mapStateToProps(state, props) {
 
 const mapDispatchToProps = {
   initChart,
-  setChartWidth
+  setChartWidth,
+  setMousePosition
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -37,7 +39,11 @@ class Chart extends Component {
     name: PropTypes.string.isRequired,
     data: PropTypes.instanceOf(Immutable.List).isRequired,
     config: PropTypes.instanceOf(Immutable.Map).isRequired,
-    chart: PropTypes.instanceOf(Immutable.Map)
+    chart: PropTypes.instanceOf(Immutable.Map),
+
+    initChart: PropTypes.func.isRequired,
+    setChartWidth: PropTypes.func.isRequired,
+    setMousePosition: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -74,6 +80,7 @@ class Chart extends Component {
           xScale = {xScale}
           yScale = {yScale}
           setChartWidth = {this.props.setChartWidth}
+          setMousePosition = {this.props.setMousePosition}
         />
       </div>
     );
