@@ -1,3 +1,2 @@
-/**
- * Created by avg on 15.04.17.
- */
+import Toolbar from './Toolbar';
+export default Toolbar;

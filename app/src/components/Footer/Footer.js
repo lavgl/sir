@@ -16,7 +16,6 @@ class Footer extends Component {
 
   render() {
     const style = merge(defaultStyle, this.props.style);
-    console.log('style', style);
     return (
       <div
         style = {style}

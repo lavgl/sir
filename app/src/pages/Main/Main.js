@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import Chart from 'components/Chart';
 import Footer from 'components/Footer';
+import Toolbar from 'components/Toolbar';
 
 import {
   chartData
@@ -43,7 +44,7 @@ class Main extends Component {
           config = {chartConfig}
         />
         <Footer>
-          LOL
+          <Toolbar />
         </Footer>
       </div>
     );
