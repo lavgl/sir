@@ -5,12 +5,17 @@ import {
   setChartZoom,
   setChartWidth,
   initChart,
-  setMousePosition
+  setMousePosition,
+  setToolbarMode
 } from 'actions/UI';
 
 import {
   DEFAULT_CHART_WIDTH
 } from 'constants/Chart';
+
+import {
+  NONE_MODE
+} from 'constants/Toolbar';
 
 const {
   fromJS
@@ -24,7 +29,11 @@ function mapChartConfig(config) {
 }
 
 const initialState = fromJS({
-  charts: {}
+  charts: {},
+  toolbar: {
+    mode: NONE_MODE,
+    params: []
+  }
 });
 
 const initChartState = fromJS({
@@ -61,6 +70,12 @@ const UI = handleActions({
   [setMousePosition]: (state, action) => {
     const { name, position } = action.payload;
     return state.setIn(['charts', name, 'mouse', 'position'], fromJS(position));
+  },
+  [setToolbarMode]: (state, action) => {
+    const { mode, params } = action.payload;
+    return state
+      .setIn(['toolbar', 'mode'], mode)
+      .setIn(['toolbar', 'params'], fromJS(params));
   }
 }, initialState);
 

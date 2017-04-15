@@ -15,7 +15,8 @@ export {
   getBottomAxisTransform,
   getLeftAxisTransform,
   getElementsTransform,
-  getMousePosition
+  getMousePosition,
+  isPositionInsideChart
 }
 
 function getWidth(element) {
@@ -68,4 +69,14 @@ function getMousePosition(config, xScale, yScale, nativeEvent) {
     x: xScale.invert(offsetX - marginLeft),
     y: yScale.invert(offsetY - marginTop)
   };
+}
+
+function isPositionInsideChart(position, xScale, yScale) {
+  const [ fromX, toX ] = xScale.domain();
+  // y scale is inverted
+  const [ toY, fromY ] = yScale.domain();
+
+  const { x, y } = position;
+
+  return x > fromX && x < toX && y > fromY && y < toY;
 }

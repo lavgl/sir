@@ -10,7 +10,8 @@ import {
   getBottomAxisTransform,
   getLeftAxisTransform,
   getElementsTransform,
-  getMousePosition
+  getMousePosition,
+  isPositionInsideChart
 } from './ChartUtils';
 
 const erd = elementResizeDetectorMaker({
@@ -25,7 +26,8 @@ class ChartView extends Component {
     xScale: PropTypes.func.isRequired,
     yScale: PropTypes.func.isRequired,
     setChartWidth: PropTypes.func.isRequired,
-    setMousePosition: PropTypes.func.isRequired
+    handleChartMouseMove: PropTypes.func.isRequired,
+    handleMoveMouseOutOfChart: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -54,10 +56,20 @@ class ChartView extends Component {
       this.props.yScale,
       e.nativeEvent
     );
-    this.props.setMousePosition({
-      name: this.props.name,
-      position
-    });
+
+    if (isPositionInsideChart(
+        position,
+        this.props.xScale,
+        this.props.yScale)) {
+
+      this.props.handleChartMouseMove({
+        name: this.props.name,
+        position
+      });
+
+    } else {
+      this.props.handleMoveMouseOutOfChart();
+    }
   }
 
   componentDidMount() {
@@ -75,6 +87,7 @@ class ChartView extends Component {
         ref = {this.makeRef}
         style={{ height: '100%' }}
         onMouseMove = {this.handleMouseMove}
+        onMouseLeave = {this.props.handleMoveMouseOutOfChart}
       >
         <svg width = '100%' height = '100%'>
           <g>

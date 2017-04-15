@@ -5,7 +5,8 @@ import Immutable from 'immutable';
 import {
   initChart,
   setChartWidth,
-  setMousePosition
+  handleChartMouseMove,
+  handleMoveMouseOutOfChart
 } from 'actions/UI';
 
 import ChartView from './ChartView';
@@ -30,7 +31,8 @@ function mapStateToProps(state, props) {
 const mapDispatchToProps = {
   initChart,
   setChartWidth,
-  setMousePosition
+  handleChartMouseMove,
+  handleMoveMouseOutOfChart
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -43,7 +45,8 @@ class Chart extends Component {
 
     initChart: PropTypes.func.isRequired,
     setChartWidth: PropTypes.func.isRequired,
-    setMousePosition: PropTypes.func.isRequired
+    handleChartMouseMove: PropTypes.func.isRequired,
+    handleMoveMouseOutOfChart: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -80,7 +83,8 @@ class Chart extends Component {
           xScale = {xScale}
           yScale = {yScale}
           setChartWidth = {this.props.setChartWidth}
-          setMousePosition = {this.props.setMousePosition}
+          handleChartMouseMove = {this.props.handleChartMouseMove}
+          handleMoveMouseOutOfChart = {this.props.handleMoveMouseOutOfChart}
         />
       </div>
     );
