@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "gulp",
-    "build": "gulp build"
+    "build": "NODE_ENV=production gulp build"
   },
   "keywords": [
     "nw"
@@ -35,6 +35,9 @@
     "gulp-webpack": "^1.5.0",
     "nw": "^0.14.7-sdk",
     "nw-builder": "^3.2.0",
-    "webpack": "^2.3.2"
+    "uglify-js": "git://github.com/mishoo/UglifyJS2.git#harmony",
+    "uglifyjs-webpack-plugin": "^0.4.3",
+    "webpack": "^2.3.2",
+    "webpack-merge": "^4.1.0"
   }
 }
