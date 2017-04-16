@@ -3,13 +3,18 @@ import { createSelector } from 'reselect';
 
 import {
   getXScale,
-  getYScale
+  getYScale,
+  getTransformObject
 } from './ChartUtils';
 
 export {
   getChartStateFactory,
   getXScaleFactory,
-  getYScaleFactory
+  getYScaleFactory,
+  getZoomTransformFactory,
+  getConfigFactory,
+  getTransformStringFactory,
+  getTransformObjectFactory
 };
 
 export const getChartStateFromRedux = (state, props) =>
@@ -17,6 +22,10 @@ export const getChartStateFromRedux = (state, props) =>
 
 function getChartStateFactory() {
   return (props) => props.chart;
+}
+
+function getConfigFactory() {
+  return (props) => props.config;
 }
 
 function getScaleSelectorFactory(domainPath, dimensionPath, marginsPaths, getScaleFn) {
@@ -57,3 +66,33 @@ const getYScaleFactory = getScaleSelectorFactory(
   ],
   getYScale
 );
+
+function getZoomTransformFactory(chartStateSelector) {
+  return createSelector(
+    [chartStateSelector],
+    (chartState) => chartState.getIn(['zoom', 'transform'])
+  );
+}
+
+function getTransformStringFactory(zoomTransformSelector, configSelector) {
+  return createSelector(
+    [zoomTransformSelector, configSelector],
+    (transform, config) => {
+      const margins = config.get('margins');
+      const marginTop = margins.get('top');
+      const marginLeft = margins.get('left');
+
+      const translateX = `${marginLeft + transform.get('x')}`;
+      const translateY = `${marginTop + transform.get('y')}`;
+
+      return `translate(${translateX},${translateY}) scale(${transform.get('k')})`;
+    }
+  );
+}
+
+function getTransformObjectFactory(zoomTransformSelector) {
+  return createSelector(
+    [zoomTransformSelector],
+    (zoomTransform) => getTransformObject(zoomTransform.toJS())
+  );
+}

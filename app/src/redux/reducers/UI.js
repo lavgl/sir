@@ -28,6 +28,11 @@ function mapChartConfig(config) {
     .set('axes', config.get('axes'));
 }
 
+function mapTransform(transform) {
+  const { x, y, k } = transform;
+  return { x, y, k };
+}
+
 const initialState = fromJS({
   charts: {},
   toolbar: {
@@ -38,9 +43,11 @@ const initialState = fromJS({
 
 const initChartState = fromJS({
   zoom: {
-    x: 0,
-    y: 0,
-    k: 1
+    transform: {
+      x: 0,
+      y: 0,
+      k: 1
+    }
   },
   mouse: {
     position: {
@@ -60,8 +67,11 @@ const UI = handleActions({
       initChartState.merge(mapChartConfig(config)));
   },
   [setChartZoom]: (state, action) => {
-    const { name, k } = action.payload;
-    return state.setIn(['charts', name, 'zoom', k], k);
+    const { name, transform } = action.payload;
+    return state.setIn(
+      ['charts', name, 'zoom', 'transform'],
+      fromJS(mapTransform(transform))
+    );
   },
   [setChartWidth]: (state, action) => {
     const { name, width } = action.payload;

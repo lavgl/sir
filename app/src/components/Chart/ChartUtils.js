@@ -1,4 +1,5 @@
 import { scaleLinear } from 'd3-scale';
+import { zoom, zoomIdentity } from 'd3-zoom';
 
 import {
   DEFAULT_CHART_WIDTH,
@@ -14,9 +15,11 @@ export {
   isReady,
   getBottomAxisTransform,
   getLeftAxisTransform,
-  getElementsTransform,
+  getElementsTranslate,
   getMousePosition,
-  isPositionInsideChart
+  isPositionInsideChart,
+  makeZoom,
+  getTransformObject
 }
 
 function getWidth(element) {
@@ -53,7 +56,7 @@ function getLeftAxisTransform(config) {
   return `translate(${marginLeft}, ${marginTop})`;
 }
 
-function getElementsTransform(config) {
+function getElementsTranslate(config) {
   const margins = config.get('margins');
   const marginLeft = margins.get('left');
   const marginTop = margins.get('top');
@@ -79,4 +82,12 @@ function isPositionInsideChart(position, xScale, yScale) {
   const { x, y } = position;
 
   return x > fromX && x < toX && y > fromY && y < toY;
+}
+
+function makeZoom(handler) {
+  return zoom().on('zoom', handler);
+}
+
+function getTransformObject({ x, y, k }) {
+  return zoomIdentity.translate(x, y).scale(k);
 }

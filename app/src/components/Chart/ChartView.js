@@ -2,6 +2,7 @@ import { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
 import elementResizeDetectorMaker from 'element-resize-detector';
 import { axisLeft, axisBottom } from 'd3-axis';
+import { event, select } from 'd3-selection';
 
 import Axis from './Axis';
 
@@ -9,9 +10,9 @@ import {
   getWidth,
   getBottomAxisTransform,
   getLeftAxisTransform,
-  getElementsTransform,
   getMousePosition,
-  isPositionInsideChart
+  isPositionInsideChart,
+  makeZoom
 } from './ChartUtils';
 
 const erd = elementResizeDetectorMaker({
@@ -26,8 +27,11 @@ class ChartView extends Component {
     xScale: PropTypes.func.isRequired,
     yScale: PropTypes.func.isRequired,
     setChartWidth: PropTypes.func.isRequired,
+    setChartZoom: PropTypes.func.isRequired,
     handleChartMouseMove: PropTypes.func.isRequired,
-    handleMoveMouseOutOfChart: PropTypes.func.isRequired
+    handleMoveMouseOutOfChart: PropTypes.func.isRequired,
+    transformString: PropTypes.string.isRequired,
+    transformObject: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -35,6 +39,7 @@ class ChartView extends Component {
 
     this.makeRef = this.makeRef.bind(this);
     this.resizeListener = this.resizeListener.bind(this);
+    this.zoomListener = this.zoomListener.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
   }
 
@@ -49,18 +54,30 @@ class ChartView extends Component {
     });
   }
 
+  zoomListener() {
+    this.props.setChartZoom({
+      name: this.props.name,
+      transform: event.transform
+    });
+  }
+
   handleMouseMove(e) {
+    const { xScale, yScale, transformObject } = this.props;
+
+    const transformedXScale = transformObject.rescaleX(xScale);
+    const transformedYScale = transformObject.rescaleY(yScale);
+
     const position = getMousePosition(
       this.props.config,
-      this.props.xScale,
-      this.props.yScale,
+      transformedXScale,
+      transformedYScale,
       e.nativeEvent
     );
 
     if (isPositionInsideChart(
         position,
-        this.props.xScale,
-        this.props.yScale)) {
+        transformedXScale,
+        transformedYScale)) {
 
       this.props.handleChartMouseMove({
         name: this.props.name,
@@ -74,6 +91,7 @@ class ChartView extends Component {
 
   componentDidMount() {
     erd.listenTo(this.chart, this.resizeListener);
+    select(this.chart).call(makeZoom(this.zoomListener));
   }
 
   componentWillUnmount() {
@@ -93,7 +111,7 @@ class ChartView extends Component {
           <g>
             {/*{grid will be here}*/}
           </g>
-          <g transform = {getElementsTransform(config)}>
+          <g transform = {this.props.transformString}>
             {this.props.data.map(datum => {
               const renderFn = config.getIn(['elements', datum.get('type'), 'render']);
               const d = datum.get('props');
@@ -103,14 +121,14 @@ class ChartView extends Component {
             })}
           </g>
           <Axis
-            scale = {yScale}
+            scale = {this.props.transformObject.rescaleY(yScale)}
             axisFn = {axisLeft}
-            transform = {getLeftAxisTransform(config)}
+            transformString = {getLeftAxisTransform(config)}
           />
           <Axis
-            scale = {xScale}
+            scale = {this.props.transformObject.rescaleX(xScale)}
             axisFn = {axisBottom}
-            transform = {getBottomAxisTransform(config)}
+            transformString = {getBottomAxisTransform(config)}
           />
         </svg>
       </div>

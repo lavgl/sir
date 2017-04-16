@@ -5,7 +5,7 @@ class Axis extends Component {
   static propTypes = {
     axisFn: PropTypes.func.isRequired,
     scale: PropTypes.func.isRequired,
-    transform: PropTypes.string
+    transformString: PropTypes.string
   };
 
   constructor(props) {
@@ -34,7 +34,7 @@ class Axis extends Component {
     return (
       <g
         ref = {this.makeRef}
-        transform = {this.props.transform}
+        transform = {this.props.transformString}
       />
     );
   }

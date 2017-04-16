@@ -5,6 +5,7 @@ import Immutable from 'immutable';
 import {
   initChart,
   setChartWidth,
+  setChartZoom,
   handleChartMouseMove,
   handleMoveMouseOutOfChart
 } from 'actions/UI';
@@ -19,7 +20,11 @@ import {
   getChartStateFromRedux,
   getXScaleFactory,
   getYScaleFactory,
-  getChartStateFactory
+  getChartStateFactory,
+  getZoomTransformFactory,
+  getTransformStringFactory,
+  getTransformObjectFactory,
+  getConfigFactory
 } from './ChartSelectors';
 
 function mapStateToProps(state, props) {
@@ -31,6 +36,7 @@ function mapStateToProps(state, props) {
 const mapDispatchToProps = {
   initChart,
   setChartWidth,
+  setChartZoom,
   handleChartMouseMove,
   handleMoveMouseOutOfChart
 };
@@ -45,6 +51,7 @@ class Chart extends Component {
 
     initChart: PropTypes.func.isRequired,
     setChartWidth: PropTypes.func.isRequired,
+    setChartZoom: PropTypes.func.isRequired,
     handleChartMouseMove: PropTypes.func.isRequired,
     handleMoveMouseOutOfChart: PropTypes.func.isRequired
   };
@@ -53,8 +60,14 @@ class Chart extends Component {
     super(props);
 
     this.getChartState = getChartStateFactory();
+    this.getConfig = getConfigFactory();
+
     this.getXScale = getXScaleFactory(this.getChartState);
     this.getYScale = getYScaleFactory(this.getChartState);
+    this.getZoomTransform = getZoomTransformFactory(this.getChartState);
+
+    this.getTransformObject = getTransformObjectFactory(this.getZoomTransform)
+    this.getTransformString = getTransformStringFactory(this.getZoomTransform, this.getConfig);
 
     props.initChart({
       name: props.name,
@@ -73,16 +86,22 @@ class Chart extends Component {
 
     const xScale = this.getXScale(this.props);
     const yScale = this.getYScale(this.props);
+    const transformString = this.getTransformString(this.props);
+    const transformObject = this.getTransformObject(this.props);
 
     return (
       <div style = {style}>
         <ChartView
           name = {this.props.name}
           data = {this.props.data}
+          chart = {this.props.chart}
           config = {this.props.config}
           xScale = {xScale}
           yScale = {yScale}
+          transformString = {transformString}
+          transformObject = {transformObject}
           setChartWidth = {this.props.setChartWidth}
+          setChartZoom = {this.props.setChartZoom}
           handleChartMouseMove = {this.props.handleChartMouseMove}
           handleMoveMouseOutOfChart = {this.props.handleMoveMouseOutOfChart}
         />
