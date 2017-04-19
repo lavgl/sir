@@ -9,7 +9,7 @@ require('./copy');
 
 gulp.task('compile:src', gulp.series('lint', 'webpack'));
 gulp.task('compile:src:watch', gulp.series('compile:src', () => {
-  gulp.watch(`${config.src.path}/**/*.js`, gulp.series('compile:src'));
+  gulp.watch(`${config.src.path}/**/*.{js,css}`, gulp.series('compile:src'));
 }));
 
 gulp.task('compile:html', gulp.series('html'));

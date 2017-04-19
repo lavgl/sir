@@ -1,0 +1,6 @@
+.react-grid-Cell:focus .drag-handle,
+.react-grid-Cell:hover:focus .drag-handle {
+    width: 0;
+    height: 0;
+    border: none;
+}
