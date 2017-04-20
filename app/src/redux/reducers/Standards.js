@@ -6,7 +6,12 @@ import {
 } from '../utils';
 
 import {
-  addStandard
+ toString
+} from 'utils';
+
+import {
+  addStandard,
+  updateStandard
 } from 'actions/Standards';
 
 const mock = {
@@ -38,6 +43,15 @@ const Standard = handleActions({
       .set('id', id);
 
     return state.setIn(['standards', id], newStandard);
+  },
+  [updateStandard]: (state, action) => {
+    const standards = state.get('standards');
+
+    const { standard } = action.payload;
+    const id = toString(standard.get('id'));
+
+    return state.setIn(['standards', id], standard);
+
   }
 }, initialState);
 

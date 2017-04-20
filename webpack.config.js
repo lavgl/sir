@@ -33,7 +33,8 @@ module.exports = {
       actions: path.resolve(config.src.path, 'redux/actions'),
       components: path.resolve(config.src.path, 'components'),
       containers: path.resolve(config.src.path, 'containers'),
-      constants: path.resolve(config.src.path, 'constants')
+      constants: path.resolve(config.src.path, 'constants'),
+      utils: path.resolve(config.src.path, 'utils')
     }
   },
   module: {
