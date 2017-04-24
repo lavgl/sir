@@ -17,7 +17,7 @@ function getChartMousePosition(state) {
   const params = toolbar.get('params');
 
   const position = state.UI.getIn(
-    ['charts', params.get('name'), 'mouse', 'position']
+    ['mouse', 'position']
   ).map(formatPosition);
 
   return `[${position.get('x')}; ${position.get('y')}]`;

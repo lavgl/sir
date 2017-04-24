@@ -1,6 +1,8 @@
 import { Component, PropTypes } from 'react';
 import { select } from 'd3-selection';
+import PureRender from 'pure-render-decorator';
 
+@PureRender
 class Axis extends Component {
   static propTypes = {
     axisFn: PropTypes.func.isRequired,
@@ -22,7 +24,6 @@ class Axis extends Component {
   refreshAxis() {
     select(this.axis).call(
       this.props.axisFn(this.props.scale)
-        .ticks(10)
     );
   }
 

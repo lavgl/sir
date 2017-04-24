@@ -1,10 +1,13 @@
 import { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
+import PureRender from 'pure-render-decorator';
 import elementResizeDetectorMaker from 'element-resize-detector';
 import { axisLeft, axisBottom } from 'd3-axis';
 import { event, select } from 'd3-selection';
 
 import Axis from './Axis';
+import Layout from './Layout';
+import Grid from './Grid';
 
 import {
   getWidth,
@@ -19,6 +22,7 @@ const erd = elementResizeDetectorMaker({
   strategy: 'scroll'
 });
 
+@PureRender
 class ChartView extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -100,6 +104,9 @@ class ChartView extends Component {
 
   render() {
     const { xScale, yScale, config } = this.props;
+    const rescaledX = this.props.transformObject.rescaleX(xScale);
+    const rescaledY = this.props.transformObject.rescaleY(yScale);
+
     return (
       <div
         ref = {this.makeRef}
@@ -108,25 +115,27 @@ class ChartView extends Component {
         onMouseLeave = {this.props.handleMoveMouseOutOfChart}
       >
         <svg width = '100%' height = '100%'>
-          <g>
-            {/*{grid will be here}*/}
+          <g transform = {getLeftAxisTransform(config)}>
+            <Grid
+              xScale = {rescaledX}
+              yScale = {rescaledY}
+            />
           </g>
           <g transform = {this.props.transformString}>
-            {this.props.data.map(datum => {
-              const renderFn = config.getIn(['elements', datum.get('type'), 'render']);
-              const d = datum.get('props');
-              const x = xScale(d.get('x'));
-              const y = yScale(d.get('y'));
-              return renderFn({ x, y }, d);
-            })}
+            <Layout
+              data = {this.props.data}
+              config = {this.props.config}
+              xScale = {xScale}
+              yScale = {yScale}
+            />
           </g>
           <Axis
-            scale = {this.props.transformObject.rescaleY(yScale)}
+            scale = {rescaledY}
             axisFn = {axisLeft}
             transformString = {getLeftAxisTransform(config)}
           />
           <Axis
-            scale = {this.props.transformObject.rescaleX(xScale)}
+            scale = {rescaledX}
             axisFn = {axisBottom}
             transformString = {getBottomAxisTransform(config)}
           />

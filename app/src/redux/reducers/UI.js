@@ -38,6 +38,12 @@ const initialState = fromJS({
   toolbar: {
     mode: NONE_MODE,
     params: []
+  },
+  mouse: {
+    position: {
+      x: 0,
+      y: 0
+    }
   }
 });
 
@@ -47,12 +53,6 @@ const initChartState = fromJS({
       x: 0,
       y: 0,
       k: 1
-    }
-  },
-  mouse: {
-    position: {
-      x: 0,
-      y: 0
     }
   },
   width: DEFAULT_CHART_WIDTH
@@ -78,8 +78,8 @@ const UI = handleActions({
     return state.setIn(['charts', name, 'width'], width);
   },
   [setMousePosition]: (state, action) => {
-    const { name, position } = action.payload;
-    return state.setIn(['charts', name, 'mouse', 'position'], fromJS(position));
+    const { position } = action.payload;
+    return state.setIn(['mouse', 'position'], fromJS(position));
   },
   [setToolbarMode]: (state, action) => {
     const { mode, params } = action.payload;
