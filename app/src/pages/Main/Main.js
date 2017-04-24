@@ -2,6 +2,8 @@ import { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 
+import { Grid, Row, Col } from 'react-bootstrap';
+
 import Chart from 'components/Chart';
 import Table from 'components/Table';
 import Footer from 'components/Footer';
@@ -81,19 +83,59 @@ class Main extends Component {
   render() {
     return (
       <div style = {style.page}>
-        <h1>Main Page</h1>
-        {/*<Chart
-          name = "main"
-          data = {this.props.chartData}
-          config = {chartConfig}
-        />*/}
-        <div style = {{ width: 400 }}>
+        <Grid fluid = {true}>
+          <Row>
+            <Col xs = {7} sm = {7} md = {7}>
+              <Row>
+                <Col>
+                  <div style = {{ height: 100 }}>
+                    Legend
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Chart
+                    name = "main"
+                    data = {this.props.chartData}
+                    config = {chartConfig}
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col xs = {5} sm = {5} md = {5}>
+              <Row>
+                <Col>
+                  <div style = {{ height: 295 }}>
+                    Standards table
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <div style = {{ height: 295 }}>
+                    Images table
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <div style = {{ height: 30 }}>
+                    Buttons panel
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Grid>
+        {/*<div>
           <Table
             columns = {columns}
             data = {this.props.standards.toList()}
             handleGridCellUpdate = {this.handleStandardTableCellUpdate}
+            minWidth = {250}
           />
-        </div>
+        </div>*/}
         <Footer>
           <Toolbar />
         </Footer>

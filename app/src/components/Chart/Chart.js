@@ -81,7 +81,8 @@ class Chart extends Component {
     }
 
     const style = {
-      height: this.props.config.get('height')
+      height: this.props.config.get('height'),
+      width: this.props.config.get('width')
     };
 
     const xScale = this.getXScale(this.props);

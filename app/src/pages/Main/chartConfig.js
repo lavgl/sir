@@ -10,11 +10,14 @@ import Standard from 'components/Chart/elements/Standard';
 
 import {
   DEFAULT_CHART_DOMAIN_X,
-  DEFAULT_CHART_DOMAIN_Y
+  DEFAULT_CHART_DOMAIN_Y,
+  DEFAULT_CHART_WIDTH,
+  DEFAULT_CHART_HEIGHT
 } from 'constants/Chart';
 
 export default Immutable.fromJS({
-  height: 500,
+  height: DEFAULT_CHART_HEIGHT,
+  width: DEFAULT_CHART_WIDTH,
   margins: {
     top: 25,
     right: 25,

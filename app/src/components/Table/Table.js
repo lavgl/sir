@@ -19,7 +19,7 @@ class Table extends Component {
   };
 
   static defaultProps = {
-    minHeight: 150
+    minHeight: 250
   };
 
   constructor(props) {

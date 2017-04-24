@@ -7,8 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "window": {
-    "min_width": 600,
-    "min_height": 600
+    "min_width": 880,
+    "max_width": 880,
+    "min_height": 620,
+    "max_height": 620
   },
   "keywords": [],
   "author": "",
@@ -18,8 +20,10 @@
     "d3": "^4.7.4",
     "element-resize-detector": "^1.1.11",
     "immutable": "^3.8.1",
+    "prop-types": "^15.5.8",
     "ramda": "^0.23.0",
     "react": "^15.4.2",
+    "react-bootstrap": "^0.30.9",
     "react-data-grid": "^2.0.27",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.3",
