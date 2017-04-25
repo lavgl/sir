@@ -22,7 +22,8 @@ import {
 
 import {
   toString,
-  toNumber
+  toNumber,
+  isAllStandardsDefined
 } from 'utils';
 
 function mapStateToProps(state) {
@@ -80,6 +81,18 @@ class Main extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (isAllStandardsDefined(nextProps.standards)) {
+      this.props.addStandard({});
+    }
+  }
+
+  componentDidMount() {
+    if (isAllStandardsDefined(this.props.standards)) {
+      this.props.addStandard({});
+    }
+  }
+
   render() {
     return (
       <div style = {style.page}>
@@ -107,7 +120,13 @@ class Main extends Component {
               <Row>
                 <Col>
                   <div style = {{ height: 295 }}>
-                    Standards table
+                    <Table
+                      columns = {columns}
+                      data = {this.props.standards.toList().concat(Immutable.Map())}
+                      handleGridCellUpdate = {this.handleStandardTableCellUpdate}
+                      minWidth = {360}
+                      minHeight = {295}
+                    />
                   </div>
                 </Col>
               </Row>
@@ -129,12 +148,7 @@ class Main extends Component {
           </Row>
         </Grid>
         {/*<div>
-          <Table
-            columns = {columns}
-            data = {this.props.standards.toList()}
-            handleGridCellUpdate = {this.handleStandardTableCellUpdate}
-            minWidth = {250}
-          />
+
         </div>*/}
         <Footer>
           <Toolbar />

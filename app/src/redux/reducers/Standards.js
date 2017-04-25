@@ -39,7 +39,7 @@ const Standard = handleActions({
 
     const id = getNewIdForIndexedCollection(standards);
     const newStandard = Immutable
-      .fromJS(mapStandard(action.paylaod))
+      .fromJS(mapStandard(action.payload))
       .set('id', id);
 
     return state.setIn(['standards', id], newStandard);

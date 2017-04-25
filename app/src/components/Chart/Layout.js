@@ -15,11 +15,15 @@ class Layout extends Component {
     return (
       <g>
         {this.props.data.map(datum => {
-          const renderFn = this.props.config.getIn(['elements', datum.get('type'), 'render']);
+          const config = this.props.config.getIn(['elements', datum.get('type')]);
+          const renderFn = config.get('render');
+          const isValidFn = config.get('isValid', () => true);
           const d = datum.get('props');
-          const x = this.props.xScale(d.get('x'));
-          const y = this.props.yScale(d.get('y'));
-          return renderFn({ x, y }, d);
+          if (isValidFn(d)) {
+            return renderFn(d, this.props.xScale, this.props.yScale);
+          } else {
+            return null;
+          }
         })}
       </g>
     );

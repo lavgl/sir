@@ -9,6 +9,10 @@ import Image from 'components/Chart/elements/Image';
 import Standard from 'components/Chart/elements/Standard';
 
 import {
+  isStandardDefined
+} from 'utils';
+
+import {
   DEFAULT_CHART_DOMAIN_X,
   DEFAULT_CHART_DOMAIN_Y,
   DEFAULT_CHART_WIDTH,
@@ -34,22 +38,23 @@ export default Immutable.fromJS({
   },
   elements: {
     [IMAGE]: {
-      render: ({ x, y }, datum) => (
+      render: (datum, xScale, yScale) => (
         <Image
           key = {`image_${datum.get('id')}`}
-          x = {x}
-          y = {y}
-        />
-      ),
-    },
-    [STANDARD]: {
-      render: ({ x, y }, datum) => (
-        <Standard
-          key = {`standard_${datum.get('id')}`}
-          x = {x}
-          y = {y}
+          x = {xScale(datum.get('x'))}
+          y = {yScale(datum.get('y'))}
         />
       )
+    },
+    [STANDARD]: {
+      render: (datum, xScale, yScale) => (
+        <Standard
+          key = {`standard_${datum.get('id')}`}
+          x = {xScale(datum.get('x'))}
+          y = {yScale(datum.get('y'))}
+        />
+      ),
+      isValid: isStandardDefined
     }
   }
 });
