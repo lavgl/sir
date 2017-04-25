@@ -31,6 +31,10 @@ class Axis extends Component {
     this.refreshAxis();
   }
 
+  componentDidMount() {
+    this.refreshAxis();
+  }
+
   render() {
     return (
       <g
