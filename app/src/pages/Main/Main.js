@@ -2,7 +2,7 @@ import { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col, Checkbox } from 'react-bootstrap';
 
 import Chart from 'components/Chart';
 import Table from 'components/Table';
@@ -29,7 +29,8 @@ import {
 function mapStateToProps(state) {
   return {
     chartData: chartData(state),
-    standards: state.Standards.get('standards')
+    standards: state.Standards.get('standards'),
+    images: state.Images.get('images')
   };
 }
 
@@ -44,19 +45,28 @@ const style = {
   }
 };
 
-const columns = {
+const standardColumns = {
   id: { key: 'id', name: '№' },
   x: { key: 'x', name: 'x', editable: true },
   y: { key: 'y', name: 'y', editable: true },
   groupId: { key: 'groupId', name: 'Группа', editable: true }
 };
 
+const imageColumns = {
+  id: { key: 'id', name: '№' },
+  x: { key: 'x', name: 'x', editable: true },
+  y: { key: 'y', name: 'y', editable: true }
+  // TODO: add result columns
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
 class Main extends Component {
   static propTypes = {
     chartData: PropTypes.instanceOf(Immutable.List).isRequired,
+    standards: PropTypes.instanceOf(Immutable.Map).isRequired,
     addStandard: PropTypes.func.isRequired,
-    updateStandard: PropTypes.func.isRequired
+    updateStandard: PropTypes.func.isRequired,
+    images: PropTypes.instanceOf(Immutable.Map).isRequired
   };
 
   constructor(props) {
@@ -81,6 +91,10 @@ class Main extends Component {
     }
   }
 
+  handleImageTableCellUpdate(event) {
+    console.log('update image', event);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (isAllStandardsDefined(nextProps.standards)) {
       this.props.addStandard({});
@@ -93,7 +107,13 @@ class Main extends Component {
     }
   }
 
+  handleOnChangeAverageStandards(e) {
+    console.log('e', e.target.checked);
+  }
+
   render() {
+    const standards = this.props.standards.toList().sortBy(v => toNumber(v.get('id')));
+    const images = this.props.images.toList().sortBy(v => toNumber(v.get('id')));
     return (
       <div style = {style.page}>
         <Grid fluid = {true}>
@@ -119,21 +139,32 @@ class Main extends Component {
             <Col xs = {5} sm = {5} md = {5}>
               <Row>
                 <Col>
-                  <div style = {{ height: 295 }}>
+                  <div style = {{ height: 230 }}>
                     <Table
-                      columns = {columns}
-                      data = {this.props.standards.toList().concat(Immutable.Map())}
+                      columns = {standardColumns}
+                      data = {standards}
                       handleGridCellUpdate = {this.handleStandardTableCellUpdate}
                       minWidth = {360}
-                      minHeight = {295}
+                      minHeight = {200}
                     />
+                    <Checkbox
+                      onChange = {this.handleOnChangeAverageStandards}
+                    >
+                      Усреднять эталоны
+                    </Checkbox>
                   </div>
                 </Col>
               </Row>
               <Row>
                 <Col>
-                  <div style = {{ height: 295 }}>
-                    Images table
+                  <div style = {{ height: 340 }}>
+                    <Table
+                      columns = {imageColumns}
+                      data = {images}
+                      handleGridCellUpdate = {this.handleImageTableCellUpdate}
+                      minWidth = {360}
+                      minHeight = {340}
+                    />
                   </div>
                 </Col>
               </Row>
