@@ -9,7 +9,8 @@ import Image from 'components/Chart/elements/Image';
 import Standard from 'components/Chart/elements/Standard';
 
 import {
-  isStandardDefined
+  isStandardDefined,
+  isImageDefined
 } from 'utils';
 
 import {
@@ -44,7 +45,8 @@ export default Immutable.fromJS({
           x = {xScale(datum.get('x'))}
           y = {yScale(datum.get('y'))}
         />
-      )
+      ),
+      isValid: isImageDefined
     },
     [STANDARD]: {
       render: (datum, xScale, yScale) => (

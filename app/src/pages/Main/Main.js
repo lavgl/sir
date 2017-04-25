@@ -21,10 +21,20 @@ import {
 } from 'actions/Standards';
 
 import {
+  addImage,
+  updateImage
+} from 'actions/Images';
+
+import {
   toString,
   toNumber,
-  isAllStandardsDefined
+  isAllStandardsDefined,
+  isAllImagesDefined
 } from 'utils';
+
+import {
+  handleCellUpdateFactory
+} from './utils';
 
 function mapStateToProps(state) {
   return {
@@ -36,7 +46,9 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   addStandard,
-  updateStandard
+  updateStandard,
+  addImage,
+  updateImage
 };
 
 const style = {
@@ -72,38 +84,43 @@ class Main extends Component {
   constructor(props) {
     super(props);
 
-    this.handleStandardTableCellUpdate = this.handleStandardTableCellUpdate.bind(this);
+    this.handleStandardTableCellUpdate = handleCellUpdateFactory(this.forStandard.bind(this));
+    this.handleImageTableCellUpdate = handleCellUpdateFactory(this.forImage.bind(this));
   }
 
-  handleStandardTableCellUpdate(event) {
-    if (event.action === 'CELL_UPDATE' && event.fromRow === event.toRow) {
-      const { cellKey, fromRow, updated } = event;
-      const newValue = toNumber(updated[cellKey]);
-      if (!isNaN(newValue) && isFinite(newValue)) {
-        const datum = this.props.standards.get(toString(fromRow));
-        const newDatum = datum.set(cellKey, newValue);
-        this.props.updateStandard({
-          standard: newDatum
-        });
-      }
-    } else {
-      console.log('Wrong event: ', event);
-    }
+  forStandard(event, newValue) {
+    const { fromRow, cellKey } = event;
+    const datum = this.props.standards.get(toString(fromRow));
+    const newDatum = datum.set(cellKey, newValue);
+    this.props.updateStandard({
+      standard: newDatum
+    });
   }
 
-  handleImageTableCellUpdate(event) {
-    console.log('update image', event);
+  forImage(event, newValue) {
+    const { fromRow, cellKey } = event;
+    const datum = this.props.images.get(toString(fromRow));
+    const newDatum = datum.set(cellKey, newValue);
+    this.props.updateImage({
+      image: newDatum
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     if (isAllStandardsDefined(nextProps.standards)) {
       this.props.addStandard({});
     }
+    if (isAllImagesDefined(nextProps.images)) {
+      this.props.addImage({});
+    }
   }
 
   componentDidMount() {
     if (isAllStandardsDefined(this.props.standards)) {
       this.props.addStandard({});
+    }
+    if (isAllImagesDefined(this.props.images)) {
+      this.props.addImage({});
     }
   }
 

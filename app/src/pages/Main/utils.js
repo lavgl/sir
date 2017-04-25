@@ -5,6 +5,11 @@ import {
   STANDARD
 } from 'constants/elementTypes';
 
+import {
+  toString,
+  toNumber
+} from 'utils';
+
 const createMapItem = (type) => (item) => {
   return Immutable.fromJS({
     type,
@@ -23,3 +28,17 @@ export const mapStandardItem = (item, groups) => {
       .remove('groupId')
   });
 };
+
+export function handleCellUpdateFactory(cb) {
+  return (event) => {
+    if (event.action === 'CELL_UPDATE' && event.fromRow === event.toRow) {
+      const { cellKey, updated } = event;
+      const newValue = toNumber(updated[cellKey]);
+      if (!isNaN(newValue) && isFinite(newValue)) {
+        cb(event, newValue);
+      }
+    } else {
+      console.log('Wrong event: ', event);
+    }
+  }
+}

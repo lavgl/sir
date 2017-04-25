@@ -6,7 +6,13 @@ import {
 } from '../utils';
 
 import {
+  toString
+} from 'utils';
+
+import {
   addImage,
+  updateImage,
+
   setImageResult
 } from 'actions/Images';
 
@@ -14,7 +20,15 @@ const mock = {
   0: { id: 0, x: 0, y: 0 },
   1: { id: 1, x: 1, y: 1 },
   2: { id: 2, x: 2, y: 2 },
-  3: { id: 3, x: 3, y: 3 }
+  3: { id: 3, x: 3, y: 3 },
+  4: { id: 4, x: 3, y: 3 },
+  5: { id: 5, x: 3, y: 3 },
+  6: { id: 6, x: 3, y: 3 },
+  7: { id: 7, x: 3, y: 3 },
+  8: { id: 8, x: 3, y: 3 },
+  9: { id: 9, x: 3, y: 3 },
+  10: { id: 10, x: 3, y: 3 },
+  11: { id: 11, x: 3, y: 3 },
 };
 
 const initialState = Immutable.fromJS({
@@ -46,6 +60,14 @@ const imagesReducer = handleActions({
       .set('id', id);
 
     return state.setIn(['images', id], newImage);
+  },
+  [updateImage]: (state, action) => {
+    const images = state.get('images');
+
+    const { image } = action.payload;
+    const id = toString(image.get('id'));
+
+    return state.setIn(['images', id], image);
   },
   [setImageResult]: (state, action) => {
     const images = state.get('images');
