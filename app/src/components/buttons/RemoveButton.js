@@ -1,0 +1,1 @@
+export const RemoveButton = () => <div>X</div>;

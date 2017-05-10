@@ -12,6 +12,7 @@ import {
 import {
   addImage,
   updateImage,
+  removeImage,
 
   setImageResult
 } from 'actions/Images';
@@ -77,6 +78,12 @@ const imagesReducer = handleActions({
       .merge(Immutable.fromJS(mapResult(result)));
 
     return state.set('images', images.set(id, newImage));
+  },
+  [removeImage]: (state, action) => {
+    const images = state.get('images');
+    const id = toString(action.payload.id);
+
+    return state.set('images', images.remove(id));
   }
 }, initialState);
 

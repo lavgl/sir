@@ -9,6 +9,8 @@ import Table from 'components/Table';
 import Footer from 'components/Footer';
 import Toolbar from 'components/Toolbar';
 
+import { RemoveButtonCell } from 'components/Table/cells';
+
 import {
   chartData
 } from './selectors';
@@ -17,12 +19,14 @@ import chartConfig from './chartConfig';
 
 import {
   addStandard,
-  updateStandard
+  updateStandard,
+  removeStandard
 } from 'actions/Standards';
 
 import {
   addImage,
-  updateImage
+  updateImage,
+  removeImage
 } from 'actions/Images';
 
 import {
@@ -33,7 +37,8 @@ import {
 } from 'utils';
 
 import {
-  handleCellUpdateFactory
+  handleCellUpdateFactory,
+  listFrom
 } from './utils';
 
 function mapStateToProps(state) {
@@ -47,28 +52,16 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   addStandard,
   updateStandard,
+  removeStandard,
   addImage,
-  updateImage
+  updateImage,
+  removeImage
 };
 
 const style = {
   page: {
     position: 'relative'
   }
-};
-
-const standardColumns = {
-  id: { key: 'id', name: '№' },
-  x: { key: 'x', name: 'x', editable: true },
-  y: { key: 'y', name: 'y', editable: true },
-  groupId: { key: 'groupId', name: 'Группа', editable: true }
-};
-
-const imageColumns = {
-  id: { key: 'id', name: '№' },
-  x: { key: 'x', name: 'x', editable: true },
-  y: { key: 'y', name: 'y', editable: true }
-  // TODO: add result columns
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -86,11 +79,63 @@ class Main extends Component {
 
     this.handleStandardTableCellUpdate = handleCellUpdateFactory(this.forStandard.bind(this));
     this.handleImageTableCellUpdate = handleCellUpdateFactory(this.forImage.bind(this));
+    this.getStandardTableColumns = this.getStandardTableColumns.bind(this);
+    this.getImageTableColumns = this.getImageTableColumns.bind(this);
+  }
+
+  getStandardTableColumns() {
+    return {
+      id: { key: 'id', name: '№' },
+      x: { key: 'x', name: 'x', editable: true },
+      y: { key: 'y', name: 'y', editable: true },
+      groupId: { key: 'groupId', name: 'Группа', editable: true },
+      remove: {
+        key: 'remove',
+        name: 'Удалить',
+        editable: false,
+        formatter: RemoveButtonCell,
+        width: 70,
+        events: {
+          onClick: (ev, eventArgs) => {
+            const rowId = toString(eventArgs.rowIdx);
+            const datum = listFrom(this.props.standards).get(rowId);
+            this.props.removeStandard({
+              id: toString(datum.get('id'))
+            });
+          }
+        }
+      }
+    };
+  }
+
+  getImageTableColumns() {
+    return {
+      id: { key: 'id', name: '№' },
+      x: { key: 'x', name: 'x', editable: true },
+      y: { key: 'y', name: 'y', editable: true },
+      remove: {
+        key: 'remove',
+        name: 'Удалить',
+        editable: false,
+        formatter: RemoveButtonCell,
+        width: 70,
+        events: {
+          onClick: (e, args) => {
+            const rowId = args.rowIdx;
+            const datum = listFrom(this.props.images).get(rowId);
+            this.props.removeImage({
+              id: datum.get('id')
+            });
+          }
+        }
+      }
+      // TODO: add result columns
+    };
   }
 
   forStandard(event, newValue) {
     const { fromRow, cellKey } = event;
-    const datum = this.props.standards.get(toString(fromRow));
+    const datum = listFrom(this.props.standards).get(fromRow);
     const newDatum = datum.set(cellKey, newValue);
     this.props.updateStandard({
       standard: newDatum
@@ -99,29 +144,11 @@ class Main extends Component {
 
   forImage(event, newValue) {
     const { fromRow, cellKey } = event;
-    const datum = this.props.images.get(toString(fromRow));
+    const datum = listFrom(this.props.images).get(fromRow);
     const newDatum = datum.set(cellKey, newValue);
     this.props.updateImage({
       image: newDatum
     });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (isAllStandardsDefined(nextProps.standards)) {
-      this.props.addStandard({});
-    }
-    if (isAllImagesDefined(nextProps.images)) {
-      this.props.addImage({});
-    }
-  }
-
-  componentDidMount() {
-    if (isAllStandardsDefined(this.props.standards)) {
-      this.props.addStandard({});
-    }
-    if (isAllImagesDefined(this.props.images)) {
-      this.props.addImage({});
-    }
   }
 
   handleOnChangeAverageStandards(e) {
@@ -158,7 +185,7 @@ class Main extends Component {
                 <Col>
                   <div style = {{ height: 230 }}>
                     <Table
-                      columns = {standardColumns}
+                      columns = {this.getStandardTableColumns()}
                       data = {standards}
                       handleGridCellUpdate = {this.handleStandardTableCellUpdate}
                       minWidth = {360}
@@ -176,7 +203,7 @@ class Main extends Component {
                 <Col>
                   <div style = {{ height: 340 }}>
                     <Table
-                      columns = {imageColumns}
+                      columns = {this.getImageTableColumns()}
                       data = {images}
                       handleGridCellUpdate = {this.handleImageTableCellUpdate}
                       minWidth = {360}

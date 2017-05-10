@@ -42,3 +42,7 @@ export function handleCellUpdateFactory(cb) {
     }
   }
 }
+
+export function listFrom(map) {
+  return map.toList().sortBy(d => d.get('id'));
+}

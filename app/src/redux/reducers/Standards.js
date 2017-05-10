@@ -11,7 +11,8 @@ import {
 
 import {
   addStandard,
-  updateStandard
+  updateStandard,
+  removeStandard
 } from 'actions/Standards';
 
 const mock = {
@@ -58,7 +59,11 @@ const Standard = handleActions({
     const id = toString(standard.get('id'));
 
     return state.setIn(['standards', id], standard);
-
+  },
+  [removeStandard]: (state, action) => {
+    const standards = state.get('standards');
+    const id = toString(action.payload.id);
+    return state.set('standards', standards.remove(id));
   }
 }, initialState);
 
