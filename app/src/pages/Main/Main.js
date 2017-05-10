@@ -191,11 +191,22 @@ class Main extends Component {
                       minWidth = {360}
                       minHeight = {200}
                     />
-                    <Checkbox
-                      onChange = {this.handleOnChangeAverageStandards}
-                    >
-                      Усреднять эталоны
-                    </Checkbox>
+                    <div className = 'btn btn-default'
+                         onClick = {this.props.addStandard}
+                         style = {{
+                           padding: '0px 6px',
+                           position: 'relative',
+                           left: -1
+                         }}>+</div>
+                    <div style = {{
+                      position: 'relative',
+                      top: -30,
+                      left: 35
+                    }}>
+                      <Checkbox onChange = {this.handleOnChangeAverageStandards}>
+                        Усреднять эталоны
+                      </Checkbox>
+                    </div>
                   </div>
                 </Col>
               </Row>
@@ -209,6 +220,13 @@ class Main extends Component {
                       minWidth = {360}
                       minHeight = {340}
                     />
+                    <div className = 'btn btn-default'
+                         onClick = {this.props.addImage}
+                         style={{
+                           position: 'relative',
+                           padding: '0 6px',
+                           left: -1
+                         }}>+</div>
                   </div>
                 </Col>
               </Row>
