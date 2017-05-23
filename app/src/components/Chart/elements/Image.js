@@ -12,7 +12,7 @@ class Image extends Component {
         cx = {this.props.x}
         cy = {this.props.y}
         fill = 'blue'
-        r = {10}
+        r = {5}
       />
     )
   }

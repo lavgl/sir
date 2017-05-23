@@ -2,11 +2,13 @@ import Immutable from 'immutable';
 
 import {
   IMAGE,
-  STANDARD
+  STANDARD,
+  LINE
 } from 'constants/elementTypes';
 
 import Image from 'components/Chart/elements/Image';
 import Standard from 'components/Chart/elements/Standard';
+import Line from 'components/Chart/elements/Line';
 
 import {
   isStandardDefined,
@@ -57,6 +59,20 @@ export default Immutable.fromJS({
         />
       ),
       isValid: isStandardDefined
+    },
+    [LINE]: {
+      render: (datum, xScale, yScale) => {
+        return (
+          <Line
+            key = {`line_${datum.get('id')}`}
+            x1 = {xScale(datum.get('x1'))}
+            x2 = {xScale(datum.get('x2'))}
+            y1 = {yScale(datum.get('y1'))}
+            y2 = {yScale(datum.get('y2'))}
+          />
+        );
+      }
+      // isValid: () => false
     }
   }
 });

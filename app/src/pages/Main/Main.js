@@ -45,8 +45,6 @@ import {
   listFrom
 } from './utils';
 
-import { check } from '../../math/classifier';
-
 function mapStateToProps(state) {
   return {
     chartData: chartData(state),

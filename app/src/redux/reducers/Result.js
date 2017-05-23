@@ -15,10 +15,7 @@ const initState = fromJS({
 const resultReducer = handleActions({
   [toggleOnIsResultCalculated]: (state) => state.set('isCalculated', true),
   [toggleOffIsResultCalculated]: (state) => state.set('isCalculated', false),
-  [setResults]: (state, action) => {
-    console.log('set results', action);
-    return state.set('results', fromJS(action.payload));
-  }
+  [setResults]: (state, action) => state.set('results', fromJS(action.payload))
 }, initState);
 
 export default resultReducer;

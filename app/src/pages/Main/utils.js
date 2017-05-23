@@ -2,7 +2,8 @@ import Immutable from 'immutable';
 
 import {
   IMAGE,
-  STANDARD
+  STANDARD,
+  LINE
 } from 'constants/elementTypes';
 
 import {
@@ -26,6 +27,20 @@ export const mapStandardItem = (item, groups) => {
     props: item
       .set('group', group)
       .remove('groupId')
+  });
+};
+export const mapLineItem = (item) => {
+  const image = item.get('image');
+  const standard = item.get('standard');
+  return Immutable.fromJS({
+    type: LINE,
+    props: {
+      id: `${image.get('id')}.${standard.get('id')}`,
+      x1: image.get('x'),
+      y1: image.get('y'),
+      x2: standard.get('x'),
+      y2: standard.get('y')
+    }
   });
 };
 

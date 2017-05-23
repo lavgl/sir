@@ -11,7 +11,7 @@ class Standard extends Component {
       <circle
         cx = {this.props.x}
         cy = {this.props.y}
-        r = {5}
+        r = {10}
         fill = 'red'
       />
     )
