@@ -5,7 +5,9 @@ import {
   DEFAULT_CHART_WIDTH,
   DEFAULT_CHART_HEIGHT,
   DEFAULT_CHART_DOMAIN_X,
-  DEFAULT_CHART_DOMAIN_Y
+  DEFAULT_CHART_DOMAIN_Y,
+  DEFAULT_SCALE_EXTENT,
+  DEFAULT_SCALE_TRANSLATE
 } from 'constants/Chart';
 
 export {
@@ -30,7 +32,7 @@ function getScaleFabric(defaultDomain, defaultRange) {
   return (domain = defaultDomain, range = defaultRange) => {
     return scaleLinear()
       .domain(domain)
-      .range(range);
+      .range(range)
   }
 }
 
@@ -85,7 +87,10 @@ function isPositionInsideChart(position, xScale, yScale) {
 }
 
 function makeZoom(handler) {
-  return zoom().on('zoom', handler);
+  return zoom()
+    .scaleExtent(DEFAULT_SCALE_EXTENT)
+    .translateExtent(DEFAULT_SCALE_TRANSLATE)
+    .on('zoom', handler);
 }
 
 function getTransformObject({ x, y, k }) {
