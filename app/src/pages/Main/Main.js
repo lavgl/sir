@@ -2,7 +2,7 @@ import { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 
-import { Grid, Row, Col, Checkbox } from 'react-bootstrap';
+import { Grid, Row, Col, Checkbox, Button } from 'react-bootstrap';
 
 import Chart from 'components/Chart';
 import Table from 'components/Table';
@@ -30,6 +30,10 @@ import {
 } from 'actions/Images';
 
 import {
+  calculateResultsAction as calculateResults
+} from 'actions/Result';
+
+import {
   toString,
   toNumber,
   isAllStandardsDefined,
@@ -40,6 +44,8 @@ import {
   handleCellUpdateFactory,
   listFrom
 } from './utils';
+
+import { check } from '../../math/classifier';
 
 function mapStateToProps(state) {
   return {
@@ -55,7 +61,8 @@ const mapDispatchToProps = {
   removeStandard,
   addImage,
   updateImage,
-  removeImage
+  removeImage,
+  calculateResults
 };
 
 const style = {
@@ -71,7 +78,9 @@ class Main extends Component {
     standards: PropTypes.instanceOf(Immutable.Map).isRequired,
     addStandard: PropTypes.func.isRequired,
     updateStandard: PropTypes.func.isRequired,
-    images: PropTypes.instanceOf(Immutable.Map).isRequired
+    images: PropTypes.instanceOf(Immutable.Map).isRequired,
+
+    calculateResults: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -201,7 +210,8 @@ class Main extends Component {
                     <div style = {{
                       position: 'relative',
                       top: -30,
-                      left: 35
+                      left: 35,
+                      width: 150
                     }}>
                       <Checkbox onChange = {this.handleOnChangeAverageStandards}>
                         Усреднять эталоны
@@ -232,17 +242,30 @@ class Main extends Component {
               </Row>
               <Row>
                 <Col>
-                  <div style = {{ height: 30 }}>
-                    Buttons panel
+                  <div style = {{
+                    height: 30,
+                    position: 'relative',
+                    left: 25,
+                    width: 200,
+                  }}>
+                    <Button
+                      bsStyle = 'success'
+                      onClick = {this.props.calculateResults}
+                    >
+                      Рассчитать
+                    </Button>
+                    <Button
+                      bsStyle = 'danger'
+                      onClick = {() => console.log('clear')}
+                    >
+                      Очистить
+                    </Button>
                   </div>
                 </Col>
               </Row>
             </Col>
           </Row>
         </Grid>
-        {/*<div>
-
-        </div>*/}
         <Footer>
           <Toolbar />
         </Footer>

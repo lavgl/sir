@@ -7,7 +7,7 @@ export const getNewIdForIndexedCollection = (collection) => {
   return toString(collection
       .keySeq()
       .map(index => index - 0)
-      .max() + 1);
+      .max() + 1 || 0);
 };
 
 export const getRandomColor = () => {
