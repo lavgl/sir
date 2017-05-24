@@ -1,10 +1,19 @@
 import { createSelector } from 'reselect';
+import { complement } from 'ramda';
 
 import {
   mapImageItem,
   mapStandardItem,
   mapLineItem
 } from './utils';
+
+import {
+  isStandardDefined,
+  isImageDefined
+} from 'utils';
+
+const isImageNotDefined = complement(isImageDefined);
+const isStandardNotDefined = complement(isStandardDefined);
 
 const images = state => state.Images.get('images');
 const standards = state => state.Standards.get('standards');
@@ -26,4 +35,11 @@ export const chartData = createSelector(
       .concat(standardItems.toList())
       .concat(lines);
   }
+);
+
+export const isSubmitButtonDisabled = createSelector(
+  images, standards,
+  (images, standards) =>
+    images.some(isImageNotDefined) ||
+    standards.some(isStandardNotDefined)
 );

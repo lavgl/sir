@@ -12,7 +12,8 @@ import Toolbar from 'components/Toolbar';
 import { RemoveButtonCell } from 'components/Table/cells';
 
 import {
-  chartData
+  chartData,
+  isSubmitButtonDisabled
 } from './selectors';
 
 import chartConfig from './chartConfig';
@@ -30,7 +31,9 @@ import {
 } from 'actions/Images';
 
 import {
-  calculateResultsAction as calculateResults
+  calculateResultsAction as calculateResults,
+  resetResult,
+  fullReset
 } from 'actions/Result';
 
 import {
@@ -49,7 +52,8 @@ function mapStateToProps(state) {
   return {
     chartData: chartData(state),
     standards: state.Standards.get('standards'),
-    images: state.Images.get('images')
+    images: state.Images.get('images'),
+    isSubmitButtonDisabled: isSubmitButtonDisabled(state)
   };
 }
 
@@ -60,7 +64,9 @@ const mapDispatchToProps = {
   addImage,
   updateImage,
   removeImage,
-  calculateResults
+  calculateResults,
+  resetResult,
+  fullReset
 };
 
 const style = {
@@ -88,6 +94,8 @@ class Main extends Component {
     this.handleImageTableCellUpdate = handleCellUpdateFactory(this.forImage.bind(this));
     this.getStandardTableColumns = this.getStandardTableColumns.bind(this);
     this.getImageTableColumns = this.getImageTableColumns.bind(this);
+    this.addStandard = this.addStandard.bind(this);
+    this.addImage = this.addImage.bind(this);
   }
 
   getStandardTableColumns() {
@@ -109,6 +117,7 @@ class Main extends Component {
             this.props.removeStandard({
               id: toString(datum.get('id'))
             });
+            this.props.resetResult();
           }
         }
       }
@@ -133,6 +142,7 @@ class Main extends Component {
             this.props.removeImage({
               id: datum.get('id')
             });
+            this.props.resetResult();
           }
         }
       }
@@ -160,6 +170,16 @@ class Main extends Component {
 
   handleOnChangeAverageStandards(e) {
     console.log('e', e.target.checked);
+  }
+
+  addStandard() {
+    this.props.resetResult();
+    this.props.addStandard();
+  }
+
+  addImage() {
+    this.props.resetResult();
+    this.props.addImage();
   }
 
   render() {
@@ -199,7 +219,7 @@ class Main extends Component {
                       minHeight = {200}
                     />
                     <div className = 'btn btn-default'
-                         onClick = {this.props.addStandard}
+                         onClick = {this.addStandard}
                          style = {{
                            padding: '0px 6px',
                            position: 'relative',
@@ -229,7 +249,7 @@ class Main extends Component {
                       minHeight = {340}
                     />
                     <div className = 'btn btn-default'
-                         onClick = {this.props.addImage}
+                         onClick = {this.addImage}
                          style={{
                            position: 'relative',
                            padding: '0 6px',
@@ -249,12 +269,13 @@ class Main extends Component {
                     <Button
                       bsStyle = 'success'
                       onClick = {this.props.calculateResults}
+                      disabled = {this.props.isSubmitButtonDisabled}
                     >
                       Рассчитать
                     </Button>
                     <Button
                       bsStyle = 'danger'
-                      onClick = {() => console.log('clear')}
+                      onClick = {this.props.fullReset}
                     >
                       Очистить
                     </Button>

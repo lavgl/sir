@@ -34,7 +34,7 @@
     "gulp-template": "^4.0.0",
     "gulp-util": "^3.0.8",
     "gulp-webpack": "^1.5.0",
-    "nw": "^0.14.7-sdk",
+    "nw": "0.14.7-sdk",
     "nw-builder": "^3.2.0",
     "style-loader": "^0.16.1",
     "uglify-js": "git://github.com/mishoo/UglifyJS2.git#harmony",

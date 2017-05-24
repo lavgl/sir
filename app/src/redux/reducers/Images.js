@@ -17,6 +17,10 @@ import {
   setImageResult
 } from 'actions/Images';
 
+import {
+  fullReset
+} from 'actions/Result';
+
 const mock = {
   0: { id: 0, x: 1, y: 1 },
   1: { id: 1, x: 4, y: 2 },
@@ -36,18 +40,10 @@ const initialState = Immutable.fromJS({
   images: mock
 });
 
-const mapImage = (payload) => {
+const mapImage = (payload = {}) => {
   return {
     x: payload.x,
     y: payload.y
-  };
-};
-
-const mapResult = (result) => {
-  return {
-    group: result.group,
-    standard: result.standard,
-    distance: result.distance
   };
 };
 
@@ -63,28 +59,18 @@ const imagesReducer = handleActions({
     return state.setIn(['images', id], newImage);
   },
   [updateImage]: (state, action) => {
-    const images = state.get('images');
-
     const { image } = action.payload;
     const id = toString(image.get('id'));
 
     return state.setIn(['images', id], image);
-  },
-  [setImageResult]: (state, action) => {
-    const images = state.get('images');
-    const { id, result } = action.payload;
-
-    const newImage = images.get(id)
-      .merge(Immutable.fromJS(mapResult(result)));
-
-    return state.set('images', images.set(id, newImage));
   },
   [removeImage]: (state, action) => {
     const images = state.get('images');
     const id = toString(action.payload.id);
 
     return state.set('images', images.remove(id));
-  }
+  },
+  [fullReset]: () => initialState
 }, initialState);
 
 export default imagesReducer;

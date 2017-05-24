@@ -15,6 +15,10 @@ import {
   removeStandard
 } from 'actions/Standards';
 
+import {
+  fullReset
+} from 'actions/Result';
+
 const mock = {
   0: { id: 0, x: -5, y: -5, groupId: 0 },
   1: { id: 1, x: 0, y: 0, groupId: 1 },
@@ -28,7 +32,7 @@ const initialState = Immutable.fromJS({
   standards: mock
 });
 
-const mapStandard = (standard) => {
+const mapStandard = (standard = {}) => {
   return {
     x: standard.x,
     y: standard.y,
@@ -59,7 +63,8 @@ const Standard = handleActions({
     const standards = state.get('standards');
     const id = toString(action.payload.id);
     return state.set('standards', standards.remove(id));
-  }
+  },
+  [fullReset]: () => initialState
 }, initialState);
 
 export default Standard;

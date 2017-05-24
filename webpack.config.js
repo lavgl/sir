@@ -1,11 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const config = require('./config')();
 
 const env = process.env.NODE_ENV || 'development';
-const isProduction = env === 'production';
+// const isProduction = env === 'production';
 
 const plugins = [
   new webpack.EnvironmentPlugin({
@@ -13,11 +13,13 @@ const plugins = [
   })
 ];
 
-if (isProduction) {
-  plugins.push(
-    new UglifyJSPlugin()
-  );
-}
+console.log('env', env);
+
+// if (isProduction) {
+//   plugins.push(
+//     new UglifyJSPlugin()
+//   );
+// }
 
 module.exports = {
   entry: path.resolve(config.src.path, 'index.js'),

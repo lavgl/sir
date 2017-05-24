@@ -30,8 +30,8 @@ module.exports = function () {
       path: buildPath,
       nw: {
         platforms: ['linux64', 'win32'],
-        version: '0.14.7',
-        flavor: 'normal'
+        version: '0.14.7'
+        // flavor: env === 'development' ? 'sdk' : 'normal'
       }
     }
   };
