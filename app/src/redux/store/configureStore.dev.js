@@ -3,13 +3,17 @@ import thunk from 'redux-thunk';
 import rootReducer from '../reducers';
 import DevTools from '../../containers/DevTools';
 
+const options = {
+  maxAge: 25
+};
+
 const configureStore = preloadedState => {
   const store = createStore(
     rootReducer,
     preloadedState,
     compose(
       applyMiddleware(thunk),
-      DevTools.instrument()
+      DevTools.instrument(options)
     )
   );
 
