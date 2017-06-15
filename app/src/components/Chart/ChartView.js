@@ -15,7 +15,8 @@ import {
   getLeftAxisTransform,
   getMousePosition,
   isPositionInsideChart,
-  makeZoom
+  makeZoom,
+  getInnerSvgProps
 } from './ChartUtils';
 
 const erd = elementResizeDetectorMaker({
@@ -121,14 +122,16 @@ class ChartView extends Component {
               yScale = {rescaledY}
             />
           </g>
-          <g transform = {this.props.transformString}>
-            <Layout
-              data = {this.props.data}
-              config = {this.props.config}
-              xScale = {xScale}
-              yScale = {yScale}
-            />
-          </g>
+          <svg {...getInnerSvgProps(config)}>
+            <g transform = {this.props.transformString}>
+              <Layout
+                data = {this.props.data}
+                config = {this.props.config}
+                xScale = {xScale}
+                yScale = {yScale}
+              />
+            </g>
+          </svg>
           <Axis
             scale = {rescaledY}
             axisFn = {axisLeft}
