@@ -3,13 +3,14 @@ import Immutable from 'immutable';
 import { values } from 'ramda';
 
 import ReactDataGrid from 'react-data-grid';
+import listenToClickOutside from 'react-onclickoutside';
 
 import {
   getDataFactory,
   getRowsCountFactory
 } from './TableSelectors';
 
-
+@listenToClickOutside
 class Table extends Component {
   static propTypes = {
     columns: PropTypes.object.isRequired,
@@ -40,6 +41,10 @@ class Table extends Component {
     this.props.handleGridCellUpdate && this.props.handleGridCellUpdate(obj);
   }
 
+  handleClickOutside() {
+    this.grid.deselectCells();
+  }
+
   render() {
     const rowsCount = this.getRowsCount(this.props);
 
@@ -51,6 +56,7 @@ class Table extends Component {
 
     return (
       <ReactDataGrid
+        ref = {ref => this.grid = ref}
         columns = {values(columns)}
         minHeight = {minHeight}
         rowGetter = {this.rowGetter}
