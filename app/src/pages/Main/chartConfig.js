@@ -12,7 +12,8 @@ import Line from 'components/Chart/elements/Line';
 
 import {
   isStandardDefined,
-  isImageDefined
+  isImageDefined,
+  getStandardDatumColor
 } from 'utils';
 
 import {
@@ -56,6 +57,7 @@ export default Immutable.fromJS({
           key = {`standard_${datum.get('id')}`}
           x = {xScale(datum.get('x'))}
           y = {yScale(datum.get('y'))}
+          color = {getStandardDatumColor(datum)}
         />
       ),
       isValid: isStandardDefined

@@ -8,6 +8,7 @@ import Chart from 'components/Chart';
 import Table from 'components/Table';
 import Footer from 'components/Footer';
 import Toolbar from 'components/Toolbar';
+import Legend from 'components/Legend';
 
 import { RemoveButtonCell } from 'components/Table/cells';
 
@@ -192,9 +193,7 @@ class Main extends Component {
             <Col xs = {7} sm = {7} md = {7}>
               <Row>
                 <Col>
-                  <div style = {{ height: 100 }}>
-                    Legend
-                  </div>
+                  <Legend />
                 </Col>
               </Row>
               <Row>

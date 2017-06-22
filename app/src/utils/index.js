@@ -1,3 +1,5 @@
+import { schemeCategory20 } from 'd3-scale';
+
 export function toString(any) {
   return any.toString();
 }
@@ -25,4 +27,12 @@ export function isImageDefined(image) {
 
 export function isAllImagesDefined(images) {
   return images.every(isImageDefined);
+}
+
+export function getColorForGroup(groupId) {
+  return schemeCategory20[groupId % (schemeCategory20.length - 1)];
+}
+
+export function getStandardDatumColor(standard) {
+  return standard.getIn(['group', 'color']);
 }
