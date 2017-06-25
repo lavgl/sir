@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import Immutable, { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
 
 import {
@@ -6,7 +6,7 @@ import {
 } from '../utils';
 
 import {
-  toString
+  prepareMock
 } from 'utils';
 
 import {
@@ -21,7 +21,7 @@ import {
   fullReset
 } from 'actions/Result';
 
-const mock = {
+const mock = prepareMock({
   0: { id: 0, x: 1, y: 1 },
   1: { id: 1, x: 4, y: 2 },
   2: { id: 2, x: 4, y: 6 },
@@ -34,9 +34,9 @@ const mock = {
   // 9: { id: 9, x: 3, y: 3 },
   // 10: { id: 10, x: 3, y: 3 },
   // 11: { id: 11, x: 3, y: 3 },
-};
+});
 
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
   images: mock
 });
 
@@ -60,13 +60,13 @@ const imagesReducer = handleActions({
   },
   [updateImage]: (state, action) => {
     const { image } = action.payload;
-    const id = toString(image.get('id'));
+    const id = image.get('id');
 
     return state.setIn(['images', id], image);
   },
   [removeImage]: (state, action) => {
     const images = state.get('images');
-    const id = toString(action.payload.id);
+    const id = action.payload.id;
 
     return state.set('images', images.remove(id));
   },

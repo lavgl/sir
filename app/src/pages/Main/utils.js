@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 import {
   IMAGE,
@@ -6,13 +6,8 @@ import {
   LINE
 } from 'constants/elementTypes';
 
-import {
-  toString,
-  toNumber
-} from 'utils';
-
 const createMapItem = (type) => (item) => {
-  return Immutable.fromJS({
+  return fromJS({
     type,
     props: item
   });
@@ -21,8 +16,8 @@ const createMapItem = (type) => (item) => {
 export const mapImageItem = createMapItem(IMAGE);
 
 export const mapStandardItem = (item, groups) => {
-  const group = groups.get(''+item.get('groupId'));
-  return Immutable.fromJS({
+  const group = groups.get(item.get('groupId'));
+  return fromJS({
     type: STANDARD,
     props: item
       .set('group', group)
@@ -32,7 +27,7 @@ export const mapStandardItem = (item, groups) => {
 export const mapLineItem = (item) => {
   const image = item.get('image');
   const standard = item.get('standard');
-  return Immutable.fromJS({
+  return fromJS({
     type: LINE,
     props: {
       id: `${image.get('id')}.${standard.get('id')}`,
@@ -48,7 +43,7 @@ export function handleCellUpdateFactory(cb) {
   return (event) => {
     if (event.action === 'CELL_UPDATE' && event.fromRow === event.toRow) {
       const { cellKey, updated } = event;
-      const newValue = toNumber(updated[cellKey]);
+      const newValue = updated[cellKey];
       if (!isNaN(newValue) && isFinite(newValue)) {
         cb(event, newValue);
       }

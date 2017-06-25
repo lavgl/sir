@@ -38,8 +38,6 @@ import {
 } from 'actions/Result';
 
 import {
-  toString,
-  toNumber,
   isAllStandardsDefined,
   isAllImagesDefined
 } from 'utils';
@@ -113,10 +111,10 @@ class Main extends Component {
         width: 70,
         events: {
           onClick: (ev, eventArgs) => {
-            const rowId = toString(eventArgs.rowIdx);
+            const rowId = eventArgs.rowIdx;
             const datum = listFrom(this.props.standards).get(rowId);
             this.props.removeStandard({
-              id: toString(datum.get('id'))
+              id: datum.get('id')
             });
             this.props.resetResult();
           }
@@ -184,8 +182,8 @@ class Main extends Component {
   }
 
   render() {
-    const standards = this.props.standards.toList().sortBy(v => toNumber(v.get('id')));
-    const images = this.props.images.toList().sortBy(v => toNumber(v.get('id')));
+    const standards = this.props.standards.toList().sortBy(v => v.get('id'));
+    const images = this.props.images.toList().sortBy(v => v.get('id'));
     return (
       <div style = {style.page}>
         <Grid fluid = {true}>

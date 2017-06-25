@@ -1,12 +1,10 @@
+import { fromJS } from 'immutable';
 import { schemeCategory20 } from 'd3-scale';
 
-export function toString(any) {
-  return any.toString();
-}
-
-export function toNumber(string) {
-  return string - 0;
-}
+import {
+  prop,
+  first
+} from './fp';
 
 export function isStandardDefined(standard) {
   return standard.has('id') && standard.get('id') !== undefined
@@ -35,4 +33,11 @@ export function getColorForGroup(groupId) {
 
 export function getStandardDatumColor(standard) {
   return standard.getIn(['group', 'color']);
+}
+
+export function prepareMock(plainObject) {
+  return fromJS(plainObject)
+    .toList()
+    .groupBy(prop('id'))
+    .map(first);
 }

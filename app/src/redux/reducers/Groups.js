@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import Immutable, { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
 
 import {
@@ -6,7 +6,8 @@ import {
 } from '../utils';
 
 import {
-  getColorForGroup
+  getColorForGroup,
+  prepareMock
 } from 'utils';
 
 import {
@@ -14,7 +15,7 @@ import {
   removeGroup
 } from 'actions/Groups';
 
-const mock = {
+const mock = prepareMock({
   0: { id: 0, color: getColorForGroup(0) },
   1: { id: 1, color: getColorForGroup(1) },
   2: { id: 2, color: getColorForGroup(2) },
@@ -26,9 +27,9 @@ const mock = {
   8: { id: 8, color: getColorForGroup(8) },
   9: { id: 9, color: getColorForGroup(9) },
   10: { id: 10, color: getColorForGroup(10) }
-};
+});
 
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
   groups: mock
 });
 

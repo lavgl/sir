@@ -1,13 +1,10 @@
 import { color } from 'd3-color';
-import {
-  toString
-} from 'utils';
 
 export const getNewIdForIndexedCollection = (collection) => {
-  return toString(collection
+  return collection
       .keySeq()
       .map(index => index - 0)
-      .max() + 1 || 0);
+      .max() + 1 || 0;
 };
 
 export const getRandomColor = () => {

@@ -2,13 +2,9 @@ import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Map } from 'immutable';
 
-import {
-  toString
-} from 'utils';
-
 function mapStateToProps(state, { groupId }) {
   return {
-    group: state.Groups.getIn(['groups', toString(groupId)])
+    group: state.Groups.getIn(['groups', groupId])
   };
 }
 
