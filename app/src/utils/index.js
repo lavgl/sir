@@ -6,6 +6,10 @@ import {
   first
 } from './fp';
 
+export function toNumber(string) {
+  return string - 0;
+}
+
 export function isStandardDefined(standard) {
   return standard.has('id') && standard.get('id') !== undefined
     && standard.has('x') && standard.get('x') !== undefined

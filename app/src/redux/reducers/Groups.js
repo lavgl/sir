@@ -1,5 +1,6 @@
-import Immutable, { fromJS } from 'immutable';
+import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
+import { identity } from 'ramda';
 
 import {
   getNewIdForIndexedCollection
@@ -11,9 +12,17 @@ import {
 } from 'utils';
 
 import {
+  prop
+} from 'utils/fp';
+
+import {
   addGroup,
   removeGroup
 } from 'actions/Groups';
+
+import {
+  fullReset
+} from 'actions/Result';
 
 const mock = prepareMock({
   0: { id: 0, color: getColorForGroup(0) },
@@ -35,12 +44,17 @@ const initialState = fromJS({
 
 const Groups = handleActions({
   [addGroup]: (state, action) => {
-    const groups = state.get('groups');
-    const id = getNewIdForIndexedCollection(groups);
-    const color = getColorForGroup(id);
-    const newGroup = Immutable.fromJS({ id, color });
-    return state.setIn(['groups', id], newGroup);
-  }
+    const { groupId } = action.payload;
+
+    const color = getColorForGroup(groupId);
+    const newGroup = fromJS({ id: groupId, color });
+
+    return state
+      .setIn(['groups', groupId], newGroup)
+      .sortBy(prop('id'));
+  },
+  [removeGroup]: (state, action) => state.deleteIn(['groups', action.payload.groupId]),
+  [fullReset]: () => initialState
 }, initialState);
 
 export default Groups;

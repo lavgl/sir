@@ -22,7 +22,8 @@ import chartConfig from './chartConfig';
 import {
   addStandard,
   updateStandard,
-  removeStandard
+  removeStandard,
+  updateStandardAndGroup
 } from 'actions/Standards';
 
 import {
@@ -59,6 +60,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   addStandard,
   updateStandard,
+  updateStandardAndGroup,
   removeStandard,
   addImage,
   updateImage,
@@ -153,7 +155,7 @@ class Main extends Component {
     const { fromRow, cellKey } = event;
     const datum = listFrom(this.props.standards).get(fromRow);
     const newDatum = datum.set(cellKey, newValue);
-    this.props.updateStandard({
+    this.props.updateStandardAndGroup({
       standard: newDatum
     });
   }
