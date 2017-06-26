@@ -9,6 +9,7 @@ import Table from 'components/Table';
 import Footer from 'components/Footer';
 import Toolbar from 'components/Toolbar';
 import Legend from 'components/Legend';
+import Navbar from 'components/Navbar';
 
 import { RemoveButtonCell } from 'components/Table/cells';
 
@@ -185,6 +186,7 @@ class Main extends Component {
     const images = this.props.images.toList().sortBy(v => v.get('id'));
     return (
       <div style = {style.page}>
+        <Navbar />
         <Grid fluid = {true}>
           <Row>
             <Col xs = {7} sm = {7} md = {7}>
@@ -203,7 +205,7 @@ class Main extends Component {
                 </Col>
               </Row>
             </Col>
-            <Col xs = {5} sm = {5} md = {5}>
+            <Col xs = {5} sm = {5} md = {5} style = {{ marginTop: 5 }}>
               <Row>
                 <Col>
                   <div style = {{ height: 230 }}>
@@ -236,13 +238,13 @@ class Main extends Component {
               </Row>
               <Row>
                 <Col>
-                  <div style = {{ height: 340 }}>
+                  <div style = {{ height: 280 }}>
                     <Table
                       columns = {this.getImageTableColumns()}
                       data = {images}
                       handleGridCellUpdate = {this.handleImageTableCellUpdate}
                       minWidth = {360}
-                      minHeight = {340}
+                      minHeight = {280}
                     />
                     <div className = 'btn btn-default'
                          onClick = {this.addImage}

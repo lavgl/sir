@@ -4,3 +4,17 @@
     height: 0;
     border: none;
 }
+
+.navbar {
+  margin-bottom: 5px;
+  min-height: 10px;
+  border-radius: 0;
+}
+
+.navbar .container {
+  margin-left: 0;
+}
+
+.nav > li > a {
+  padding: 0;
+}

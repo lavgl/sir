@@ -27,7 +27,7 @@ class LegendItem extends Component {
         <div>Группа {group.get('id')}</div>
       </div>
     );
-  };
+  }
 }
 
 export default LegendItem;
