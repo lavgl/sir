@@ -21,9 +21,8 @@ import chartConfig from './chartConfig';
 
 import {
   addStandard,
-  updateStandard,
-  removeStandard,
-  updateStandardAndGroup
+  updateStandardAndGroup,
+  removeStandardAndMaybeGroup
 } from 'actions/Standards';
 
 import {
@@ -59,15 +58,14 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   addStandard,
-  updateStandard,
   updateStandardAndGroup,
-  removeStandard,
   addImage,
   updateImage,
   removeImage,
   calculateResults,
   resetResult,
-  fullReset
+  fullReset,
+  removeStandardAndMaybeGroup
 };
 
 const style = {
@@ -82,7 +80,6 @@ class Main extends Component {
     chartData: PropTypes.instanceOf(Immutable.List).isRequired,
     standards: PropTypes.instanceOf(Immutable.Map).isRequired,
     addStandard: PropTypes.func.isRequired,
-    updateStandard: PropTypes.func.isRequired,
     images: PropTypes.instanceOf(Immutable.Map).isRequired,
 
     calculateResults: PropTypes.func.isRequired
@@ -115,7 +112,7 @@ class Main extends Component {
           onClick: (ev, eventArgs) => {
             const rowId = eventArgs.rowIdx;
             const datum = listFrom(this.props.standards).get(rowId);
-            this.props.removeStandard({
+            this.props.removeStandardAndMaybeGroup({
               id: datum.get('id')
             });
             this.props.resetResult();

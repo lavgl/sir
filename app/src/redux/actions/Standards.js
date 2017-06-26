@@ -9,6 +9,10 @@ import {
   removeGroupIfNoStandards
 } from './Groups';
 
+const {
+  isNaN
+} = Number;
+
 export const addStandard = createAction('ADD_STANDARD');
 export const updateStandard = createAction('UPDATE_STANDARD');
 export const removeStandard = createAction('REMOVE_STANDARD');
@@ -28,6 +32,19 @@ export function updateStandardAndGroup({ standard }) {
 
     dispatch(updateStandard({ standard: _standard }));
     dispatch(removeGroupIfNoStandards({ groupId: oldGroupId }));
-    dispatch(addGroupIfNotExist({ groupId }));
+
+    if (!isNaN(groupId)) {
+      dispatch(addGroupIfNotExist({ groupId }));  
+    }
+  };
+}
+
+export function removeStandardAndMaybeGroup({ id }) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const groupId = state.Standards.getIn(['standards', id, 'groupId']);
+
+    dispatch(removeStandard({ id }));
+    dispatch(removeGroupIfNoStandards({ groupId }))
   };
 }

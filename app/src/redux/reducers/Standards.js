@@ -36,7 +36,7 @@ const mapStandard = (standard = {}) => {
   return {
     x: standard.x,
     y: standard.y,
-    groupId: standard.groupId
+    groupId: standard.groupId || 0
   }
 };
 

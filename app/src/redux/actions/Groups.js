@@ -8,7 +8,6 @@ export function addGroupIfNotExist({ groupId }) {
     const state = getState();
     const group = state.Groups.getIn(['groups', groupId]);
     if (!group) {
-      console.log('creating new groups', groupId);
       dispatch(addGroup({ groupId }));
     }
   };
