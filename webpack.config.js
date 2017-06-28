@@ -33,6 +33,7 @@ module.exports = {
     alias: {
       reducers: path.resolve(config.src.path, 'redux/reducers'),
       actions: path.resolve(config.src.path, 'redux/actions'),
+      middlewares: path.resolve(config.src.path, 'redux/middlewares'),
       components: path.resolve(config.src.path, 'components'),
       containers: path.resolve(config.src.path, 'containers'),
       constants: path.resolve(config.src.path, 'constants'),
