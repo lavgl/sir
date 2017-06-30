@@ -18,6 +18,10 @@ import {
 } from 'actions/Images';
 
 import {
+  openFileSuccess
+} from 'actions/Files';
+
+import {
   fullReset
 } from 'actions/Result';
 
@@ -70,7 +74,8 @@ const imagesReducer = handleActions({
 
     return state.set('images', images.remove(id));
   },
-  [fullReset]: () => initialState
+  [fullReset]: () => initialState,
+  [openFileSuccess]: (state, { payload }) => state.set('images', payload.get('images'))
 }, initialState);
 
 export default imagesReducer;

@@ -16,6 +16,10 @@ import {
 } from 'actions/Standards';
 
 import {
+  openFileSuccess
+} from 'actions/Files';
+
+import {
   fullReset
 } from 'actions/Result';
 
@@ -62,7 +66,8 @@ const Standard = handleActions({
     const id = action.payload.id;
     return state.set('standards', standards.remove(id));
   },
-  [fullReset]: () => initialState
+  [fullReset]: () => initialState,
+  [openFileSuccess]: (state, { payload }) => state.set('standards', payload.get('standards'))
 }, initialState);
 
 export default Standard;

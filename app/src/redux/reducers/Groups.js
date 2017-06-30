@@ -21,6 +21,10 @@ import {
 } from 'actions/Groups';
 
 import {
+  openFileSuccess
+} from 'actions/Files';
+
+import {
   fullReset
 } from 'actions/Result';
 
@@ -54,7 +58,8 @@ const Groups = handleActions({
       .sortBy(prop('id'));
   },
   [removeGroup]: (state, action) => state.deleteIn(['groups', action.payload.groupId]),
-  [fullReset]: () => initialState
+  [fullReset]: () => initialState,
+  [openFileSuccess]: (state, { payload }) => state.set('groups', payload.get('groups'))
 }, initialState);
 
 export default Groups;

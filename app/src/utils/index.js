@@ -45,3 +45,40 @@ export function prepareMock(plainObject) {
     .groupBy(prop('id'))
     .map(first);
 }
+
+const JSON_EXT_NAME = '.json';
+const JSON_FILE_REG_EXP = new RegExp(JSON_EXT_NAME.concat('$'));
+
+function isJSON(path) {
+  return JSON_FILE_REG_EXP.test(path);
+}
+
+export function formatSaveFilePath(path) {
+  const _isJSON = isJSON(path);
+  return _isJSON ? path : path.concat(JSON_EXT_NAME);
+}
+
+export function mapStateToFileContent(state) {
+  const standards = state.Standards.get('standards').toJS();
+  const images = state.Images.get('images').toJS();
+  const groups = state.Groups.get('groups').toJS();
+
+  return JSON.stringify({ standards, images, groups });
+}
+
+export function mapFileContentToState(content) {
+  return JSON.parse(content);
+}
+
+export function numberizeIds(immutableObj) {
+  if (!immutableObj.mapKeys) {
+    return immutableObj;
+  }
+
+  const withMappedKeys = immutableObj.mapKeys(key => {
+    const k = toNumber(key);
+    return typeof k === 'number' && !isNaN(k) ? k : key;
+  });
+
+  return withMappedKeys.map(numberizeIds);
+}

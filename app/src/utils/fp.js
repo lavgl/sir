@@ -5,3 +5,8 @@ export const prop = key => immutableObject => {
 }
 
 export const first = immutableObject => immutableObject.first();
+
+export function log(arg) {
+  console.log(arg);
+  return arg;
+}
