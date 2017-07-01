@@ -1,10 +1,17 @@
 import { fromJS } from 'immutable';
+import { compose, head } from 'ramda';
 import { schemeCategory20 } from 'd3-scale';
+import Ajv from 'ajv';
 
 import {
   prop,
-  first
+  first,
+  log
 } from './fp';
+
+import {
+  fileSchema
+} from './schema';
 
 export function toNumber(string) {
   return string - 0;
@@ -59,26 +66,45 @@ export function formatSaveFilePath(path) {
 }
 
 export function mapStateToFileContent(state) {
-  const standards = state.Standards.get('standards').toJS();
-  const images = state.Images.get('images').toJS();
-  const groups = state.Groups.get('groups').toJS();
+  const standards = state.Standards.get('standards').toArray();
+  const images = state.Images.get('images').toArray();
+  const groups = state.Groups.get('groups').toArray();
 
   return JSON.stringify({ standards, images, groups });
 }
 
-export function mapFileContentToState(content) {
+export function parseFile(content) {
   return JSON.parse(content);
 }
 
-export function numberizeIds(immutableObj) {
-  if (!immutableObj.mapKeys) {
-    return immutableObj;
+function formatAjvError(error) {
+  return `${error.dataPath} ${error.message}`;
+}
+
+export function validateFile(content) {
+  const ajv = new Ajv();
+  const valid = ajv.validate(fileSchema, content);
+
+  if (!valid) {
+    throw new Error(formatAjvError(head(ajv.errors)));
   }
 
-  const withMappedKeys = immutableObj.mapKeys(key => {
-    const k = toNumber(key);
-    return typeof k === 'number' && !isNaN(k) ? k : key;
-  });
-
-  return withMappedKeys.map(numberizeIds);
+  return content;
 }
+
+function fromListToMap(list, key = 'id') {
+  return list
+    .groupBy(prop(key))
+    .map(first);
+}
+
+function fromListsToMaps(content) {
+  return content
+    .withMutations(content =>
+      content
+        .update('standards', fromListToMap)
+        .update('images', fromListToMap)
+        .update('groups', fromListToMap));
+}
+
+export const mapFileContentToState = compose(log, fromListsToMaps, fromJS, validateFile, parseFile);

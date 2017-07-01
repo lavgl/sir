@@ -7,8 +7,10 @@ import {
   formatSaveFilePath,
   mapStateToFileContent,
   mapFileContentToState,
-  numberizeIds
+  validateFile
 } from 'utils';
+
+import { log } from 'utils/fp';
 
 export const OPEN_FILE = 'OPEN_FILE';
 export const SAVE_FILE = 'SAVE_FILE';
@@ -57,7 +59,7 @@ export function openFile() {
   return (dispatch) => {
     dispatch(openFileDialog())
       .then(compose(dispatch, loadFile, prop('payload')))
-      .then(compose(dispatch, openFileSuccess, numberizeIds, fromJS, mapFileContentToState, prop('payload')))
+      .then(compose(dispatch, openFileSuccess, mapFileContentToState, prop('payload')))
       .catch(err => {
         // TODO: notify user the file is broken
         console.log('err', err);
