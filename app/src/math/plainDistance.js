@@ -1,4 +1,4 @@
-function distance(standard, image) {
+export function distance(standard, image) {
   return Math.sqrt(
       Math.pow(standard.x - image.x, 2) +
       Math.pow(standard.y - image.y, 2)
@@ -12,13 +12,14 @@ function findClosestStandardForImage(standards, image) {
   return standards[minIndex];
 }
 
-export function calculateResults(standards, images) {
+export default function calculateResultsWithPlainDistance(standards, images) {
   return images.map(image => {
     const closestStandard = findClosestStandardForImage(standards, image);
+
     return {
       image,
       standard: closestStandard,
       distance: distance(closestStandard, image)
     };
-  })
+  });
 }
