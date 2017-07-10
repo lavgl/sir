@@ -101,8 +101,6 @@ function getTransformObject({ x, y, k }) {
 function getInnerSvgProps(config) {
   const margins = config.get('margins').toJS();
   return {
-    x: margins.left,
-    y: margins.top,
     width: config.get('width') - margins.left - margins.right,
     height: config.get('height') - margins.top - margins.bottom
   };
