@@ -3,7 +3,8 @@ import { fromJS } from 'immutable';
 import {
   IMAGE,
   STANDARD,
-  LINE
+  LINE,
+  FADED_STANDARD
 } from 'constants/elementTypes';
 
 const createMapItem = (type) => (item) => {

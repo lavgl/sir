@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable';
 import { compose, head } from 'ramda';
 import { schemeCategory20 } from 'd3-scale';
+import { color as d3Color, rgb } from 'd3-color';
 import Ajv from 'ajv';
 
 import {
@@ -45,6 +46,24 @@ export function getColorForGroup(groupId) {
 export function getStandardDatumColor(standard) {
   return standard.getIn(['group', 'color']);
 }
+
+function makeColorTransparentFactory(opacity = 0.5) {
+  return color => {
+    if (!(color instanceof d3Color)) {
+      throw new Error('You should pass d3 color object as first argument');
+    }
+
+    color.opacity = opacity;
+
+    return color.toString();
+  };
+}
+
+const makeColorTransparent = makeColorTransparentFactory();
+
+export const getFadedStandardDatumColor = compose(
+  makeColorTransparent, d3Color, getStandardDatumColor
+);
 
 export function prepareMock(plainObject) {
   return fromJS(plainObject)

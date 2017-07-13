@@ -3,7 +3,8 @@ import Immutable from 'immutable';
 import {
   IMAGE,
   STANDARD,
-  LINE
+  LINE,
+  FADED_STANDARD
 } from 'constants/elementTypes';
 
 import Image from 'components/Chart/elements/Image';
@@ -13,7 +14,8 @@ import Line from 'components/Chart/elements/Line';
 import {
   isStandardDefined,
   isImageDefined,
-  getStandardDatumColor
+  getStandardDatumColor,
+  getFadedStandardDatumColor
 } from 'utils';
 
 import {
@@ -58,6 +60,17 @@ export default Immutable.fromJS({
           x = {xScale(datum.get('x'))}
           y = {yScale(datum.get('y'))}
           color = {getStandardDatumColor(datum)}
+        />
+      ),
+      isValid: isStandardDefined
+    },
+    [FADED_STANDARD]: {
+      render: (datum, xScale, yScale) => (
+        <Standard
+          key = {`faded_standard_${datum.get('id')}`}
+          x = {xScale(datum.get('x'))}
+          y = {yScale(datum.get('y'))}
+          color = {getFadedStandardDatumColor(datum)}
         />
       ),
       isValid: isStandardDefined
