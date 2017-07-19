@@ -39,6 +39,10 @@ import {
 } from 'actions/Result';
 
 import {
+  toggleAverageStandards
+} from 'actions/UI';
+
+import {
   isAllStandardsDefined,
   isAllImagesDefined
 } from 'utils';
@@ -53,7 +57,8 @@ function mapStateToProps(state) {
     chartData: chartData(state),
     standards: state.Standards.get('standards'),
     images: state.Images.get('images'),
-    isSubmitButtonDisabled: isSubmitButtonDisabled(state)
+    isSubmitButtonDisabled: isSubmitButtonDisabled(state),
+    shouldAverageStandards: state.UI.get('shouldAverageStandards')
   };
 }
 
@@ -66,7 +71,8 @@ const mapDispatchToProps = {
   calculateResults,
   resetResult,
   fullReset,
-  removeStandardAndMaybeGroup
+  removeStandardAndMaybeGroup,
+  toggleAverageStandards
 };
 
 const style = {
@@ -167,10 +173,6 @@ class Main extends Component {
     });
   }
 
-  handleOnChangeAverageStandards(e) {
-    console.log('e', e.target.checked);
-  }
-
   addStandard() {
     this.props.resetResult();
     this.props.addStandard();
@@ -229,7 +231,10 @@ class Main extends Component {
                       left: 35,
                       width: 150
                     }}>
-                      <Checkbox onChange = {this.handleOnChangeAverageStandards}>
+                      <Checkbox
+                        onChange = {this.props.toggleAverageStandards}
+                        checked = {this.props.shouldAverageStandards}
+                      >
                         Усреднять эталоны
                       </Checkbox>
                     </div>

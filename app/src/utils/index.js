@@ -47,7 +47,7 @@ export function getStandardDatumColor(standard) {
   return standard.getIn(['group', 'color']);
 }
 
-function makeColorTransparentFactory(opacity = 0.5) {
+function makeColorTransparentFactory(opacity = 0.13) {
   return color => {
     if (!(color instanceof d3Color)) {
       throw new Error('You should pass d3 color object as first argument');

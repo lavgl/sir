@@ -1,12 +1,14 @@
 import Immutable from 'immutable';
 import { handleActions } from 'redux-actions';
+import { not } from 'ramda';
 
 import {
   setChartZoom,
   setChartWidth,
   initChart,
   setMousePosition,
-  setToolbarMode
+  setToolbarMode,
+  toggleAverageStandards
 } from 'actions/UI';
 
 import {
@@ -44,7 +46,8 @@ const initialState = fromJS({
       x: 0,
       y: 0
     }
-  }
+  },
+  shouldAverageStandards: false
 });
 
 const initChartState = fromJS({
@@ -86,7 +89,8 @@ const UI = handleActions({
     return state
       .setIn(['toolbar', 'mode'], mode)
       .setIn(['toolbar', 'params'], fromJS(params));
-  }
+  },
+  [toggleAverageStandards]: state => state.update('shouldAverageStandards', not)
 }, initialState);
 
 export default UI;

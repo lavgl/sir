@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable';
+import { add, compose } from 'ramda';
 
 import {
   IMAGE,
@@ -6,6 +7,8 @@ import {
   LINE,
   FADED_STANDARD
 } from 'constants/elementTypes';
+
+import { prop, count } from 'utils/fp';
 
 const createMapItem = (type) => (item) => {
   return fromJS({
@@ -16,15 +19,19 @@ const createMapItem = (type) => (item) => {
 
 export const mapImageItem = createMapItem(IMAGE);
 
-export const mapStandardItem = (item, groups) => {
+const createMapStandardItem = type => (item, groups) => {
   const group = groups.get(item.get('groupId'));
   return fromJS({
-    type: STANDARD,
+    type,
     props: item
       .set('group', group)
       .remove('groupId')
   });
 };
+
+export const mapStandardItem = createMapStandardItem(STANDARD);
+export const mapFadedStandardItem = createMapStandardItem(FADED_STANDARD);
+
 export const mapLineItem = (item) => {
   const image = item.get('image');
   const standard = item.get('standard');
@@ -56,4 +63,74 @@ export function handleCellUpdateFactory(cb) {
 
 export function listFrom(map) {
   return map.toList().sortBy(d => d.get('id'));
+}
+
+const avg = (propName, cluster) => cluster.map(prop(propName)).reduce(add) / cluster.size;
+const getGroupId = standardsCluster => standardsCluster.first().get('groupId');
+
+function generateIdForAverageStandard(cluster) {
+  const groupId = getGroupId(cluster);
+  return `AVERAGE_CLUSTER_${groupId}`;
+}
+
+function findAverageStandardCoords(standardsCluster) {
+  const avgX = avg('x', standardsCluster);
+  const avgY = avg('y', standardsCluster);
+  const groupId = getGroupId(standardsCluster);
+
+  return fromJS({
+    x: avgX,
+    y: avgY,
+    groupId,
+    id: generateIdForAverageStandard(standardsCluster)
+  });
+}
+
+function getCountByGroupId(standards) {
+  return standards.groupBy(prop('groupId')).map(count());
+}
+
+export function defineStandardsTypes(standards) {
+  const countByGroupId = getCountByGroupId(standards);
+
+  return standards.map(standard => {
+    const groupId = standard.get('groupId');
+    const type = countByGroupId.get(groupId) > 1 ? FADED_STANDARD : STANDARD;
+
+    return fromJS({ type, standard });
+  });
+}
+
+const standardMappers = {
+  [STANDARD]: mapStandardItem,
+  [FADED_STANDARD]: mapFadedStandardItem
+};
+
+export function mapTypedStandardItem(groups) {
+  return item => {
+    const type = item.get('type');
+    const standard = item.get('standard');
+
+    const mapper = standardMappers[type];
+
+    if (!mapper) {
+      throw new Error(`You should provide mapper for ${type}`);
+    }
+
+    return mapper(standard, groups);
+  };
+}
+
+function getAverageStandards(standards) {
+  return standards
+    .groupBy(prop('groupId'))
+    .filter(standards => standards.size > 1)
+    .map(findAverageStandardCoords)
+    .toList();
+}
+
+export function populateAverageStandards(standards) {
+  return getAverageStandards(standards)
+    .map(standard =>
+      fromJS({ type: STANDARD, standard }));
 }
