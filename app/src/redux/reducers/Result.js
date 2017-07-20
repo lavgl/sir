@@ -9,6 +9,10 @@ import {
   fullReset
 } from 'actions/Result';
 
+import {
+  toggleAverageStandards
+} from 'actions/UI';
+
 const initState = fromJS({
   isCalculated: false,
   results: []
@@ -19,7 +23,8 @@ const resultReducer = handleActions({
   [toggleOffIsResultCalculated]: (state) => state.set('isCalculated', false),
   [setResults]: (state, action) => state.set('results', fromJS(action.payload)),
   [resetResult]: handleReset,
-  [fullReset]: handleReset
+  [fullReset]: handleReset,
+  [toggleAverageStandards]: handleReset
 }, initState);
 
 function handleReset(state) {

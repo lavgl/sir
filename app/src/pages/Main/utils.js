@@ -121,12 +121,22 @@ export function mapTypedStandardItem(groups) {
   };
 }
 
-function getAverageStandards(standards) {
+// TODO: move function to upper level, as it is used in actions
+export function getAverageStandards(standards) {
   return standards
     .groupBy(prop('groupId'))
     .filter(standards => standards.size > 1)
     .map(findAverageStandardCoords)
     .toList();
+}
+
+// TODO: the same, move to upper level
+export function removeFadedStandards(standards) {
+  return standards
+    .groupBy(prop('groupId'))
+    .filterNot(standards => standards.size > 1)
+    .toList()
+    .flatten(true);
 }
 
 export function populateAverageStandards(standards) {
