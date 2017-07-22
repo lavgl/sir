@@ -15,7 +15,9 @@ import { RemoveButtonCell } from 'components/Table/cells';
 
 import {
   chartData,
-  isSubmitButtonDisabled
+  isSubmitButtonDisabled,
+  isResultCalculated,
+  sortedDataForImagesTable
 } from './selectors';
 
 import chartConfig from './chartConfig';
@@ -58,7 +60,9 @@ function mapStateToProps(state) {
     standards: state.Standards.get('standards'),
     images: state.Images.get('images'),
     isSubmitButtonDisabled: isSubmitButtonDisabled(state),
-    shouldAverageStandards: state.UI.get('shouldAverageStandards')
+    shouldAverageStandards: state.UI.get('shouldAverageStandards'),
+    isResultCalculated: isResultCalculated(state),
+    dataForImagesTable: sortedDataForImagesTable(state)
   };
 }
 
@@ -95,8 +99,8 @@ class Main extends Component {
   constructor(props) {
     super(props);
 
-    this.handleStandardTableCellUpdate = handleCellUpdateFactory(this.forStandard.bind(this));
-    this.handleImageTableCellUpdate = handleCellUpdateFactory(this.forImage.bind(this));
+    this.handleStandardTableCellUpdate = handleCellUpdateFactory(this.handleCellUpdateForStandard.bind(this));
+    this.handleImageTableCellUpdate = handleCellUpdateFactory(this.handleCellUpdateForImage.bind(this));
     this.getStandardTableColumns = this.getStandardTableColumns.bind(this);
     this.getImageTableColumns = this.getImageTableColumns.bind(this);
     this.addStandard = this.addStandard.bind(this);
@@ -130,47 +134,55 @@ class Main extends Component {
   }
 
   getImageTableColumns() {
-    return {
-      id: { key: 'id', name: '№' },
-      x: { key: 'x', name: 'x', editable: true },
-      y: { key: 'y', name: 'y', editable: true },
-      remove: {
-        key: 'remove',
-        name: 'Удалить',
-        editable: false,
-        formatter: RemoveButtonCell,
-        width: 70,
-        events: {
-          onClick: (e, args) => {
-            const rowId = args.rowIdx;
-            const datum = listFrom(this.props.images).get(rowId);
-            this.props.removeImage({
-              id: datum.get('id')
-            });
-            this.props.resetResult();
+    return Object.assign({},
+      {
+        id: { key: 'id', name: '№' },
+        x: { key: 'x', name: 'x', editable: true },
+        y: { key: 'y', name: 'y', editable: true }
+      },
+      this.props.isResultCalculated ? {
+        groupId: { key: 'groupId', name: 'Группа'  },
+        distance: { key: 'distance', name: 'Расстояние' },
+      } : null,
+      {
+        remove: {
+          key: 'remove',
+          name: 'Удалить',
+          editable: false,
+          formatter: RemoveButtonCell,
+          width: 70,
+          events: {
+            onClick: (e, args) => {
+              const rowId = args.rowIdx;
+              const datum = listFrom(this.props.images).get(rowId);
+              this.props.removeImage({
+                id: datum.get('id')
+              });
+              this.props.resetResult();
+            }
           }
         }
-      }
-      // TODO: add result columns
-    };
+      });
   }
 
-  forStandard(event, newValue) {
+  handleCellUpdateForStandard(event, newValue) {
     const { fromRow, cellKey } = event;
     const datum = listFrom(this.props.standards).get(fromRow);
     const newDatum = datum.set(cellKey, newValue);
     this.props.updateStandardAndGroup({
       standard: newDatum
     });
+    this.props.resetResult();
   }
 
-  forImage(event, newValue) {
+  handleCellUpdateForImage(event, newValue) {
     const { fromRow, cellKey } = event;
     const datum = listFrom(this.props.images).get(fromRow);
     const newDatum = datum.set(cellKey, newValue);
     this.props.updateImage({
       image: newDatum
     });
+    this.props.resetResult();
   }
 
   addStandard() {
@@ -246,7 +258,7 @@ class Main extends Component {
                   <div style = {{ height: 280 }}>
                     <Table
                       columns = {this.getImageTableColumns()}
-                      data = {images}
+                      data = {this.props.dataForImagesTable}
                       handleGridCellUpdate = {this.handleImageTableCellUpdate}
                       minWidth = {360}
                       minHeight = {280}

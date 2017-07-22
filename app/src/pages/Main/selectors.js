@@ -13,8 +13,11 @@ import {
 
 import {
   isStandardDefined,
-  isImageDefined
+  isImageDefined,
+  formatDistance
 } from 'utils';
+
+import { prop } from 'utils/fp';
 
 const isImageNotDefined = complement(isImageDefined);
 const isStandardNotDefined = complement(isStandardDefined);
@@ -24,6 +27,7 @@ const standards = state => state.Standards.get('standards');
 const groups = state => state.Groups.get('groups');
 const results = state => state.Result.get('results');
 const shouldAverageStandards = state => state.UI.get('shouldAverageStandards');
+export const isResultCalculated = state => state.Result.get('isCalculated');
 
 const lines = createSelector(
   results, (results) => results.map(mapLineItem)
@@ -59,3 +63,24 @@ export const isSubmitButtonDisabled = createSelector(
     images.some(isImageNotDefined) ||
     standards.some(isStandardNotDefined)
 );
+
+const dataForImagesTable = createSelector(
+  images, results,
+  (images, results) => {
+    if (!results || !results.size) return images;
+
+    return images.map(image => {
+      const result = results.find(r => r.getIn(['image', 'id']) === image.get('id'));
+
+      return image.withMutations(image =>
+        image
+          .set('groupId', result.getIn(['standard', 'groupId']))
+          .set('distance', formatDistance(result.get('distance'))))
+    });
+  }
+)
+
+export const sortedDataForImagesTable = createSelector(
+  dataForImagesTable,
+  dataForImagesTable =>
+    dataForImagesTable.toList().sortBy(prop('id')));

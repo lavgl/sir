@@ -2,6 +2,7 @@ import { fromJS } from 'immutable';
 import { compose, head } from 'ramda';
 import { schemeCategory20 } from 'd3-scale';
 import { color as d3Color, rgb } from 'd3-color';
+import { format as d3Format } from 'd3-format';
 import Ajv from 'ajv';
 
 import {
@@ -127,3 +128,5 @@ function fromListsToMaps(content) {
 }
 
 export const mapFileContentToState = compose(log, fromListsToMaps, fromJS, validateFile, parseFile);
+
+export const formatDistance = d3Format('.2f');
