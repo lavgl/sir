@@ -8,7 +8,8 @@ import {
   initChart,
   setMousePosition,
   setToolbarMode,
-  toggleAverageStandards
+  toggleAverageStandards,
+  selectCalculationAlgorithm
 } from 'actions/UI';
 
 import {
@@ -18,6 +19,10 @@ import {
 import {
   NONE_MODE
 } from 'constants/Toolbar';
+
+import {
+  PLAIN_DISTANCE_ALGORITHM
+} from 'constants/UI';
 
 const {
   fromJS
@@ -47,7 +52,8 @@ const initialState = fromJS({
       y: 0
     }
   },
-  shouldAverageStandards: false
+  shouldAverageStandards: false,
+  calculationAlgorithm: PLAIN_DISTANCE_ALGORITHM
 });
 
 const initChartState = fromJS({
@@ -90,7 +96,8 @@ const UI = handleActions({
       .setIn(['toolbar', 'mode'], mode)
       .setIn(['toolbar', 'params'], fromJS(params));
   },
-  [toggleAverageStandards]: state => state.update('shouldAverageStandards', not)
+  [toggleAverageStandards]: state => state.update('shouldAverageStandards', not),
+  [selectCalculationAlgorithm]: (state, { payload }) => state.set('calculationAlgorithm', payload)
 }, initialState);
 
 export default UI;

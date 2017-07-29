@@ -1,6 +1,7 @@
 import { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
+import { path, compose } from 'ramda';
 
 import { Grid, Row, Col, Checkbox, Button, FormControl } from 'react-bootstrap';
 
@@ -17,7 +18,8 @@ import {
   chartData,
   isSubmitButtonDisabled,
   isResultCalculated,
-  sortedDataForImagesTable
+  sortedDataForImagesTable,
+  calculationAlgorithm
 } from './selectors';
 
 import chartConfig from './chartConfig';
@@ -47,7 +49,8 @@ import {
 } from 'actions/Result';
 
 import {
-  toggleAverageStandards
+  toggleAverageStandards,
+  selectCalculationAlgorithm
 } from 'actions/UI';
 
 import {
@@ -68,7 +71,8 @@ function mapStateToProps(state) {
     isSubmitButtonDisabled: isSubmitButtonDisabled(state),
     shouldAverageStandards: state.UI.get('shouldAverageStandards'),
     isResultCalculated: isResultCalculated(state),
-    dataForImagesTable: sortedDataForImagesTable(state)
+    dataForImagesTable: sortedDataForImagesTable(state),
+    calculationAlgorithm: calculationAlgorithm(state)
   };
 }
 
@@ -82,7 +86,8 @@ const mapDispatchToProps = {
   resetResult,
   fullReset,
   removeStandardAndMaybeGroup,
-  toggleAverageStandards
+  toggleAverageStandards,
+  selectCalculationAlgorithm: compose(selectCalculationAlgorithm, path(['target', 'value']))
 };
 
 const style = {
@@ -257,7 +262,11 @@ class Main extends Component {
               </Row>
               <Row style = {{ marginBottom: 10, marginRight: -8 }}>
                 <Col>
-                  <FormControl componentClass = 'select'>
+                  <FormControl
+                    componentClass = 'select'
+                    onChange = {this.props.selectCalculationAlgorithm}
+                    value = {this.props.calculationAlgorithm}
+                  >
                     <option value = {PLAIN_DISTANCE_ALGORITHM}>Алгоритм 1</option>
                     <option value = {DECISIVE_FUNCTION_ALGORITHM}>Алгоритм 2</option>
                     <option value = {SEPARATING_FUNCTION_ALGORITHM}>Алгоритм 3</option>

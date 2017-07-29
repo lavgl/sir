@@ -28,6 +28,7 @@ const groups = state => state.Groups.get('groups');
 const results = state => state.Result.get('results');
 const shouldAverageStandards = state => state.UI.get('shouldAverageStandards');
 export const isResultCalculated = state => state.Result.get('isCalculated');
+export const calculationAlgorithm = state => state.UI.get('calculationAlgorithm');
 
 const lines = createSelector(
   results, (results) => results.map(mapLineItem)

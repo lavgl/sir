@@ -11,6 +11,7 @@ export const setChartWidth = createAction('SET_CHART_WIDTH');
 export const setMousePosition = createAction('SET_MOUSE_POSITION');
 export const setToolbarMode = createAction('SET_TOOLBAR_MODE');
 export const toggleAverageStandards = createAction('TOGGLE_AVERAGE_STANDARDS');
+export const selectCalculationAlgorithm = createAction('SELECT_CALCULATION_ALGORITHM');
 
 export function handleChartMouseMove({ name, position }) {
   return (dispatch, getState) => {
