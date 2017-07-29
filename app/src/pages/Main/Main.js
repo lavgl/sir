@@ -2,7 +2,7 @@ import { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 
-import { Grid, Row, Col, Checkbox, Button } from 'react-bootstrap';
+import { Grid, Row, Col, Checkbox, Button, FormControl } from 'react-bootstrap';
 
 import Chart from 'components/Chart';
 import Table from 'components/Table';
@@ -21,6 +21,12 @@ import {
 } from './selectors';
 
 import chartConfig from './chartConfig';
+
+import {
+  PLAIN_DISTANCE_ALGORITHM,
+  DECISIVE_FUNCTION_ALGORITHM,
+  SEPARATING_FUNCTION_ALGORITHM
+} from 'constants/UI';
 
 import {
   addStandard,
@@ -222,79 +228,77 @@ class Main extends Component {
             <Col xs = {5} sm = {5} md = {5} style = {{ marginTop: 5 }}>
               <Row>
                 <Col>
-                  <div style = {{ height: 230 }}>
-                    <Table
-                      columns = {this.getStandardTableColumns()}
-                      data = {standards}
-                      handleGridCellUpdate = {this.handleStandardTableCellUpdate}
-                      minWidth = {360}
-                      minHeight = {200}
-                    />
-                    <div className = 'btn btn-default'
-                         onClick = {this.addStandard}
-                         style = {{
-                           padding: '0px 6px',
-                           position: 'relative',
-                           left: -1
-                         }}>+</div>
-                    <div style = {{
-                      position: 'relative',
-                      top: -30,
-                      left: 35,
-                      width: 150
-                    }}>
-                      <Checkbox
-                        onChange = {this.props.toggleAverageStandards}
-                        checked = {this.props.shouldAverageStandards}
-                      >
-                        Усреднять эталоны
-                      </Checkbox>
-                    </div>
-                  </div>
+                  <Table
+                    columns = {this.getStandardTableColumns()}
+                    data = {standards}
+                    handleGridCellUpdate = {this.handleStandardTableCellUpdate}
+                    minWidth = {360}
+                    minHeight = {200}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col style = {{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <Button
+                    bsStyle = 'default'
+                    onClick = {this.addStandard}
+                    style = {{ padding: '0px 6px' }}
+                  >
+                    +
+                  </Button>
+                  <Checkbox
+                    style = {{ marginLeft: 10 }}
+                    onChange = {this.props.toggleAverageStandards}
+                    checked = {this.props.shouldAverageStandards}
+                  >
+                    Усреднять эталоны
+                  </Checkbox>
+                </Col>
+              </Row>
+              <Row style = {{ marginBottom: 10, marginRight: -8 }}>
+                <Col>
+                  <FormControl componentClass = 'select'>
+                    <option value = {PLAIN_DISTANCE_ALGORITHM}>Алгоритм 1</option>
+                    <option value = {DECISIVE_FUNCTION_ALGORITHM}>Алгоритм 2</option>
+                    <option value = {SEPARATING_FUNCTION_ALGORITHM}>Алгоритм 3</option>
+                  </FormControl>
                 </Col>
               </Row>
               <Row>
                 <Col>
-                  <div style = {{ height: 280 }}>
-                    <Table
-                      columns = {this.getImageTableColumns()}
-                      data = {this.props.dataForImagesTable}
-                      handleGridCellUpdate = {this.handleImageTableCellUpdate}
-                      minWidth = {360}
-                      minHeight = {280}
-                    />
-                    <div className = 'btn btn-default'
-                         onClick = {this.addImage}
-                         style={{
-                           position: 'relative',
-                           padding: '0 6px',
-                           left: -1
-                         }}>+</div>
-                  </div>
+                  <Table
+                    columns = {this.getImageTableColumns()}
+                    data = {this.props.dataForImagesTable}
+                    handleGridCellUpdate = {this.handleImageTableCellUpdate}
+                    minWidth = {360}
+                    minHeight = {254}
+                  />
                 </Col>
               </Row>
               <Row>
-                <Col>
-                  <div style = {{
-                    height: 30,
-                    position: 'relative',
-                    left: 25,
-                    width: 200,
-                  }}>
-                    <Button
-                      bsStyle = 'success'
-                      onClick = {this.props.calculateResults}
-                      disabled = {this.props.isSubmitButtonDisabled}
-                    >
-                      Рассчитать
-                    </Button>
-                    <Button
-                      bsStyle = 'danger'
-                      onClick = {this.props.fullReset}
-                    >
-                      Очистить
-                    </Button>
-                  </div>
+                <Col style = {{ marginTop: 8, display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <Button
+                    bsStyle = 'default'
+                    onClick = {this.addImage}
+                    style = {{ padding: '0px 6px', marginRight: 10 }}
+                  >
+                    +
+                  </Button>
+                  <Button
+                    bsStyle = 'success'
+                    style = {{ width: 217, marginRight: 10 }}
+                    onClick = {this.props.calculateResults}
+                    disabled = {this.props.isSubmitButtonDisabled}
+                  >
+                    Рассчитать
+                  </Button>
+                  <Button
+                    bsStyle = 'danger'
+                    style = {{ width: 100 }}
+                    onClick = {this.props.fullReset}
+                  >
+                    Очистить
+                  </Button>
                 </Col>
               </Row>
             </Col>
