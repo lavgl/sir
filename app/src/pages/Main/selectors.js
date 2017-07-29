@@ -17,7 +17,7 @@ import {
   formatDistance
 } from 'utils';
 
-import { prop } from 'utils/fp';
+import { prop, filter } from 'utils/fp';
 
 const isImageNotDefined = complement(isImageDefined);
 const isStandardNotDefined = complement(isStandardDefined);
@@ -34,8 +34,10 @@ const lines = createSelector(
   results, (results) => results.map(mapLineItem)
 );
 
+const definedStandards = createSelector(standards, filter(isStandardDefined))
+
 const transformedStandards = createSelector(
-  [standards, shouldAverageStandards, groups],
+  [definedStandards, shouldAverageStandards, groups],
   (standards, shouldAverageStandards, groups) => {
     if (shouldAverageStandards) {
       return defineStandardsTypes(standards).toList()

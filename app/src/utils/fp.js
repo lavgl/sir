@@ -11,4 +11,5 @@ export function log(arg) {
   return arg;
 }
 
-export const count = predicate => collection => collection.count(predicate); 
+export const count = predicate => collection => collection.count(predicate);
+export const filter = predicate => collection => collection.filter(predicate);
