@@ -112,6 +112,7 @@ class Main extends Component {
 
     this.handleStandardTableCellUpdate = handleCellUpdateFactory(this.handleCellUpdateForStandard.bind(this));
     this.handleImageTableCellUpdate = handleCellUpdateFactory(this.handleCellUpdateForImage.bind(this));
+    this.handleChangeAlgorithm = this.handleChangeAlgorithm.bind(this);
     this.getStandardTableColumns = this.getStandardTableColumns.bind(this);
     this.getImageTableColumns = this.getImageTableColumns.bind(this);
     this.addStandard = this.addStandard.bind(this);
@@ -196,6 +197,11 @@ class Main extends Component {
     this.props.resetResult();
   }
 
+  handleChangeAlgorithm(e) {
+    this.props.selectCalculationAlgorithm(e);
+    this.props.resetResult();
+  }
+
   addStandard() {
     this.props.resetResult();
     this.props.addStandard();
@@ -264,7 +270,7 @@ class Main extends Component {
                 <Col>
                   <FormControl
                     componentClass = 'select'
-                    onChange = {this.props.selectCalculationAlgorithm}
+                    onChange = {this.handleChangeAlgorithm}
                     value = {this.props.calculationAlgorithm}
                   >
                     <option value = {PLAIN_DISTANCE_ALGORITHM}>Алгоритм 1</option>
