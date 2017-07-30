@@ -22,7 +22,9 @@ export {
   isPositionInsideChart,
   makeZoom,
   getTransformObject,
-  getInnerSvgProps
+  getInnerSvgProps,
+  getLayoutXScale,
+  getLayoutYScale
 }
 
 function getWidth(element) {
@@ -101,8 +103,19 @@ function getTransformObject({ x, y, k }) {
 function getInnerSvgProps(config) {
   const margins = config.get('margins').toJS();
   return {
+    x: margins.left,
+    y: margins.top,
     width: config.get('width') - margins.left - margins.right,
     height: config.get('height') - margins.top - margins.bottom
   };
+}
 
+function getLayoutXScale({ config }) {
+  const { width } = getInnerSvgProps(config);
+  return getXScale(DEFAULT_CHART_DOMAIN_X, [0, width]);
+}
+
+function getLayoutYScale({ config }) {
+  const { height } = getInnerSvgProps(config);
+  return getYScale(DEFAULT_CHART_DOMAIN_Y, [0, height]);
 }

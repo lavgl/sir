@@ -22,7 +22,6 @@ import {
   getYScaleFactory,
   getChartStateFactory,
   getZoomTransformFactory,
-  getTransformStringFactory,
   getTransformObjectFactory,
   getConfigFactory
 } from './ChartSelectors';
@@ -67,7 +66,6 @@ class Chart extends Component {
     this.getZoomTransform = getZoomTransformFactory(this.getChartState);
 
     this.getTransformObject = getTransformObjectFactory(this.getZoomTransform)
-    this.getTransformString = getTransformStringFactory(this.getZoomTransform, this.getConfig);
 
     props.initChart({
       name: props.name,
@@ -87,7 +85,6 @@ class Chart extends Component {
 
     const xScale = this.getXScale(this.props);
     const yScale = this.getYScale(this.props);
-    const transformString = this.getTransformString(this.props);
     const transformObject = this.getTransformObject(this.props);
 
     return (
@@ -99,7 +96,6 @@ class Chart extends Component {
           config = {this.props.config}
           xScale = {xScale}
           yScale = {yScale}
-          transformString = {transformString}
           transformObject = {transformObject}
           setChartWidth = {this.props.setChartWidth}
           setChartZoom = {this.props.setChartZoom}

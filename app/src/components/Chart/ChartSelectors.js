@@ -13,7 +13,6 @@ export {
   getYScaleFactory,
   getZoomTransformFactory,
   getConfigFactory,
-  getTransformStringFactory,
   getTransformObjectFactory
 };
 
@@ -71,22 +70,6 @@ function getZoomTransformFactory(chartStateSelector) {
   return createSelector(
     [chartStateSelector],
     (chartState) => chartState.getIn(['zoom', 'transform'])
-  );
-}
-
-function getTransformStringFactory(zoomTransformSelector, configSelector) {
-  return createSelector(
-    [zoomTransformSelector, configSelector],
-    (transform, config) => {
-      const margins = config.get('margins');
-      const marginTop = margins.get('top');
-      const marginLeft = margins.get('left');
-
-      const translateX = `${marginLeft + transform.get('x')}`;
-      const translateY = `${marginTop + transform.get('y')}`;
-
-      return `translate(${translateX},${translateY}) scale(${transform.get('k')})`;
-    }
   );
 }
 

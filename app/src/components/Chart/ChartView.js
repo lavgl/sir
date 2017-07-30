@@ -16,7 +16,9 @@ import {
   getMousePosition,
   isPositionInsideChart,
   makeZoom,
-  getInnerSvgProps
+  getInnerSvgProps,
+  getLayoutXScale,
+  getLayoutYScale
 } from './ChartUtils';
 
 const erd = elementResizeDetectorMaker({
@@ -35,7 +37,6 @@ class ChartView extends Component {
     setChartZoom: PropTypes.func.isRequired,
     handleChartMouseMove: PropTypes.func.isRequired,
     handleMoveMouseOutOfChart: PropTypes.func.isRequired,
-    transformString: PropTypes.string.isRequired,
     transformObject: PropTypes.object.isRequired
   };
 
@@ -104,9 +105,12 @@ class ChartView extends Component {
   }
 
   render() {
-    const { xScale, yScale, config } = this.props;
-    const rescaledX = this.props.transformObject.rescaleX(xScale);
-    const rescaledY = this.props.transformObject.rescaleY(yScale);
+    const { xScale, yScale, config, transformObject } = this.props;
+    const rescaledX = transformObject.rescaleX(xScale);
+    const rescaledY = transformObject.rescaleY(yScale);
+
+    const transformedLayoutXScale = transformObject.rescaleX(getLayoutXScale(this.props));
+    const transformedLayoutYScale = transformObject.rescaleY(getLayoutYScale(this.props));
 
     return (
       <div
@@ -123,14 +127,12 @@ class ChartView extends Component {
             />
           </g>
           <svg {...getInnerSvgProps(config)}>
-            <g transform = {this.props.transformString}>
-              <Layout
-                data = {this.props.data}
-                config = {this.props.config}
-                xScale = {xScale}
-                yScale = {yScale}
-              />
-            </g>
+            <Layout
+              data = {this.props.data}
+              config = {this.props.config}
+              xScale = {transformedLayoutXScale}
+              yScale = {transformedLayoutYScale}
+            />
           </svg>
           <Axis
             scale = {rescaledY}
