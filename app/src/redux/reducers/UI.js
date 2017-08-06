@@ -9,11 +9,13 @@ import {
   setMousePosition,
   setToolbarMode,
   toggleAverageStandards,
-  selectCalculationAlgorithm
+  selectCalculationAlgorithm,
+  setChartToolbarMode
 } from 'actions/UI';
 
 import {
-  DEFAULT_CHART_WIDTH
+  DEFAULT_CHART_WIDTH,
+  NONE_MODE as NONE_CHART_TOOLBAR_MODE
 } from 'constants/Chart';
 
 import {
@@ -64,7 +66,8 @@ const initChartState = fromJS({
       k: 1
     }
   },
-  width: DEFAULT_CHART_WIDTH
+  width: DEFAULT_CHART_WIDTH,
+  toolbarMode: NONE_CHART_TOOLBAR_MODE
 });
 
 const UI = handleActions({
@@ -97,7 +100,8 @@ const UI = handleActions({
       .setIn(['toolbar', 'params'], fromJS(params));
   },
   [toggleAverageStandards]: state => state.update('shouldAverageStandards', not),
-  [selectCalculationAlgorithm]: (state, { payload }) => state.set('calculationAlgorithm', payload)
+  [selectCalculationAlgorithm]: (state, { payload }) => state.set('calculationAlgorithm', payload),
+  [setChartToolbarMode]: (state, { payload: { name, mode } }) => state.setIn(['charts', name, 'toolbarMode'], mode)
 }, initialState);
 
 export default UI;

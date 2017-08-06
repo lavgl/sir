@@ -11,6 +11,7 @@ import Footer from 'components/Footer';
 import Toolbar from 'components/Toolbar';
 import Legend from 'components/Legend';
 import Navbar from 'components/Navbar';
+import { ChartToolbarWithButtons } from 'components/ChartToolbar';
 
 import { RemoveButtonCell } from 'components/Table/cells';
 
@@ -226,8 +227,11 @@ class Main extends Component {
                   <Legend />
                 </Col>
               </Row>
-              <Row>
+              <Row style = {{ marginTop: -10, position: 'relative' }}>
                 <Col>
+                  <div style = {{ position: 'absolute', right: 27, top: 24 }}>
+                    <ChartToolbarWithButtons />
+                  </div>
                   <Chart
                     name = "main"
                     data = {this.props.chartData}
