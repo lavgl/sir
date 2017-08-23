@@ -1,9 +1,19 @@
 import { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import PureRender from 'pure-render-decorator';
 import elementResizeDetectorMaker from 'element-resize-detector';
 import { axisLeft, axisBottom } from 'd3-axis';
 import { event, select } from 'd3-selection';
+
+import {
+  ADD_STANDARD_MODE,
+  ADD_IMAGE_MODE
+} from 'constants/Chart';
+
+import { addImage } from 'actions/Images';
+import { addStandard } from 'actions/Standards';
+import { resetResult } from 'actions/Result';
 
 import Axis from './Axis';
 import Layout from './Layout';
@@ -25,7 +35,21 @@ const erd = elementResizeDetectorMaker({
   strategy: 'scroll'
 });
 
-@PureRender
+import { getSelectedToolbarModeFactory } from './ChartSelectors';
+
+function mapStateToProps(state, props) {
+  return {
+    toolbarMode: state.UI.getIn(['charts', props.name, 'toolbarMode'])
+  };
+}
+
+const mapDispatchToProps = {
+  addImage,
+  addStandard,
+  resetResult
+};
+
+@connect(mapStateToProps, mapDispatchToProps)
 class ChartView extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -47,6 +71,7 @@ class ChartView extends Component {
     this.resizeListener = this.resizeListener.bind(this);
     this.zoomListener = this.zoomListener.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   makeRef(ref) {
@@ -95,6 +120,35 @@ class ChartView extends Component {
     }
   }
 
+  handleClick(e) {
+    const { xScale, yScale, transformObject } = this.props;
+
+    const transformedXScale = transformObject.rescaleX(xScale);
+    const transformedYScale = transformObject.rescaleY(yScale);
+
+    const position = getMousePosition(
+      this.props.config,
+      transformedXScale,
+      transformedYScale,
+      e.nativeEvent
+    );
+
+    if (isPositionInsideChart(position, transformedXScale, transformedYScale)) {
+      switch (this.props.toolbarMode) {
+        case ADD_STANDARD_MODE: {
+          this.props.resetResult();
+          this.props.addStandard(position);
+          break;
+        }
+        case ADD_IMAGE_MODE: {
+          this.props.resetResult();
+          this.props.addImage(position);
+          break;
+        }
+      }
+    }
+  }
+
   componentDidMount() {
     erd.listenTo(this.chart, this.resizeListener);
     select(this.chart).call(makeZoom(this.zoomListener));
@@ -118,6 +172,7 @@ class ChartView extends Component {
         style={{ height: '100%' }}
         onMouseMove = {this.handleMouseMove}
         onMouseLeave = {this.props.handleMoveMouseOutOfChart}
+        onClick = {this.handleClick}
       >
         <svg width = '100%' height = '100%'>
           <g transform = {getLeftAxisTransform(config)}>
