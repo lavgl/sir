@@ -1,5 +1,6 @@
-import { buildDecisiveFn } from './decisiveFn';
+import { sortBy, prop, compose, map } from 'ramda';
 
+import { buildDecisiveFn } from './decisiveFn';
 import { distance } from './plainDistance';
 
 function buildSeparatingFn(standard1, standard2) {
@@ -53,7 +54,20 @@ function checkIsImageInGroupViaSeparatingFns(matrix, groupId) {
   return isIn;
 }
 
-export default function calculateResultsWithSeparatingFunctions(standards, images) {
+function setIdAsGroupId(standard) {
+  const { groupId, id } = standard;
+
+  if (groupId !== id) {
+    return Object.assign({}, standard, { id: groupId });
+  }
+
+  return standard;
+}
+
+const prepareStandards = compose(sortBy(prop('id')), map(setIdAsGroupId));
+
+export default function calculateResultsWithSeparatingFunctions(_standards, images) {
+  const standards = prepareStandards(_standards);
   const separatingFnsMatrix = buildSeparatingFnsMaptrix(standards);
 
   return images.map(image => {
