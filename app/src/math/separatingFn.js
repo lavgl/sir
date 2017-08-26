@@ -1,4 +1,4 @@
-import { sortBy, prop, compose, map } from 'ramda';
+import { sortBy, prop, compose, map, length, uniqBy } from 'ramda';
 
 import { buildDecisiveFn } from './decisiveFn';
 import { distance } from './plainDistance';
@@ -65,9 +65,17 @@ function setIdAsGroupId(standard) {
 }
 
 const prepareStandards = compose(sortBy(prop('id')), map(setIdAsGroupId));
+const getGroupsCount = compose(length, uniqBy(prop('groupId')));
 
 export default function calculateResultsWithSeparatingFunctions(_standards, images) {
-  const standards = prepareStandards(_standards);
+  let standards;
+
+  const groupsCount = getGroupsCount(_standards);
+
+  standards = groupsCount === _standards.length 
+    ? prepareStandards(_standards)
+    : _standards;
+
   const separatingFnsMatrix = buildSeparatingFnsMaptrix(standards);
 
   return images.map(image => {
